@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="libroteca-web" />
+        <module name="libroteca-data" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="libroteca" target="11" />
+      <module name="libroteca-data" target="1.7" />
+      <module name="libroteca-web" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="libroteca" options="" />
+      <module name="libroteca-data" options="-parameters" />
+      <module name="libroteca-web" options="-parameters" />
+    </option>
+  </component>
+</project>

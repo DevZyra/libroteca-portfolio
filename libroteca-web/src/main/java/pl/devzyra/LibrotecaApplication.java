@@ -1,4 +1,4 @@
-package pl.devzyra.libroteca;
+package pl.devzyra;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
