@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -12,8 +13,8 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="libroteca" target="11" />
-      <module name="libroteca-data" target="1.7" />
-      <module name="libroteca-web" target="1.7" />
+      <module name="libroteca-data" target="11" />
+      <module name="libroteca-web" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
