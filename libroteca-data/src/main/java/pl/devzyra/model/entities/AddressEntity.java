@@ -17,7 +17,7 @@ public class AddressEntity {
     private String country;
     private String streetName;
     private String zipCode;
-    private String type;
+
 
     @ManyToOne
     @JoinColumn(name = "users_id")
