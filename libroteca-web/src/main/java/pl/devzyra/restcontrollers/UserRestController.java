@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.request.UserDetailsRequestModel;
 import pl.devzyra.model.response.UserRest;
@@ -15,7 +12,7 @@ import pl.devzyra.services.UserService;
 
 import javax.validation.Valid;
 
-import static pl.devzyra.exceptions.ErrorMessages.*;
+import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 
 @RestController
 @RequestMapping("/users")
@@ -46,6 +43,18 @@ public class UserRestController {
         return ResponseEntity.ok(returnVal);
 
     }
+
+
+    @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<UserRest> getSpecificUser(@PathVariable String userId) {
+
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        UserRest returnVal = modelMapper.map(userDto, UserRest.class);
+
+        return ResponseEntity.ok(returnVal);
+    }
+
 
 
 }

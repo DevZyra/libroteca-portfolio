@@ -4,6 +4,7 @@ package pl.devzyra.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.devzyra.exceptions.ErrorMessages;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
@@ -11,6 +12,7 @@ import pl.devzyra.model.entities.UserEntity;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
 
+import static pl.devzyra.exceptions.ErrorMessages.*;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
 
 @Service
@@ -59,4 +61,27 @@ public class UserServiceImpl implements UserService {
 
         return returnVal;
     }
+
+    @Override
+    public UserDto getUserByUserId(String userId) {
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) {
+            throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+        UserDto returnVal = modelMapper.map(userEntity, UserDto.class);
+        return returnVal;
+    }
+
+
+    @Override
+    public UserDto updateUser(String userId, UserDto userDto) {
+        return null;
+    }
+
+    @Override
+    public void deleteUser(String userId) {
+
+    }
+
+
 }
