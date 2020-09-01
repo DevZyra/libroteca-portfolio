@@ -1,6 +1,7 @@
 package pl.devzyra.restcontrollers;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -55,6 +56,18 @@ public class UserRestController {
         return ResponseEntity.ok(returnVal);
     }
 
+    @PutMapping(path = "/{userId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String userId) {
 
+
+        UserDto userDto = modelMapper.map(userDetails, UserDto.class);
+
+        UserDto updatedUser = userService.updateUser(userId, userDto);
+
+        UserRest returnValue = modelMapper.map(updatedUser, UserRest.class);
+
+        return ResponseEntity.ok(returnValue);
+    }
 
 }

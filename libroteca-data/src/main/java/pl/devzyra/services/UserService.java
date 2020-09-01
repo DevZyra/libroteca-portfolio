@@ -10,7 +10,7 @@ public interface UserService {
 
     UserDto getUserByUserId(String userId);
 
-    UserDto updateUser(String userId,UserDto userDto);
+    UserDto updateUser(String userId, UserDto userDto);
 
     void deleteUser(String userId);
 }
