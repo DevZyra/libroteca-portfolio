@@ -3,19 +3,16 @@ package pl.devzyra.services;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.devzyra.exceptions.ErrorMessages;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.entities.UserEntity;
-import pl.devzyra.model.response.UserRest;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
 
-import static pl.devzyra.exceptions.ErrorMessages.*;
+import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
 
 @Service
@@ -78,7 +75,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(String userId, UserDto userDto) {
-        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 
         UserEntity userEntity = userRepository.findByUserId(userId);
 
@@ -86,19 +85,23 @@ public class UserServiceImpl implements UserService {
             throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
         }
 
-        modelMapper.map(userDto, userEntity);
+        mapper.map(userDto, userEntity);
 
         userRepository.save(userEntity);
 
-        UserDto returnVal = new UserDto();
-        BeanUtils.copyProperties(userEntity, returnVal);
-
-        return returnVal;
+        return modelMapper.map(userEntity, UserDto.class);
     }
 
     @Override
     public void deleteUser(String userId) {
 
+        UserEntity userEntity = userRepository.findByUserId(userId);
+
+        if (userEntity == null) {
+            throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+
+        userRepository.delete(userEntity);
     }
 
 

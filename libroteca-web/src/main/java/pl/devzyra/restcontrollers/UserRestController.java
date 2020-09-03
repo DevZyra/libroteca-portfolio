@@ -1,7 +1,6 @@
 package pl.devzyra.restcontrollers;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -45,7 +44,6 @@ public class UserRestController {
 
     }
 
-
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> getSpecificUser(@PathVariable String userId) {
 
@@ -70,4 +68,11 @@ public class UserRestController {
         return ResponseEntity.ok(returnValue);
     }
 
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+
+        userService.deleteUser(userId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
