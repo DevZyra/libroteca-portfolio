@@ -6,4 +6,7 @@ import pl.devzyra.model.entities.BookEntity;
 
 @Repository
 public interface BookRepository extends CrudRepository<BookEntity, Long> {
+
+
+    BookEntity findByTitle(String title);
 }
