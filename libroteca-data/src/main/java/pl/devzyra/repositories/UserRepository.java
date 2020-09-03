@@ -1,9 +1,9 @@
 package pl.devzyra.repositories;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import pl.devzyra.model.entities.UserEntity;
 
-public interface UserRepository extends CrudRepository<UserEntity, Long> {
+public interface UserRepository extends PagingAndSortingRepository<UserEntity, Long> {
 
     UserEntity findByEmail(String email);
 

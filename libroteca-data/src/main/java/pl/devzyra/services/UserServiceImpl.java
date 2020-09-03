@@ -3,14 +3,21 @@ package pl.devzyra.services;
 
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.entities.UserEntity;
+import pl.devzyra.model.response.UserRest;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
@@ -58,6 +65,22 @@ public class UserServiceImpl implements UserService {
         UserEntity stored = userRepository.save(userEntity);
 
         UserDto returnVal = modelMapper.map(stored, UserDto.class);
+
+        return returnVal;
+    }
+
+    @Override
+    public List<UserDto> getUsers(int page, int limit) {
+        List<UserDto> returnVal = new ArrayList<>();
+
+        Pageable pageableRequest = PageRequest.of(page, limit);
+        Page<UserEntity> userEntities = userRepository.findAll(pageableRequest);
+
+        userEntities.getContent().stream().forEach(x -> {
+            UserDto userDto = modelMapper.map(x, UserDto.class);
+            returnVal.add(userDto);
+        });
+
 
         return returnVal;
     }

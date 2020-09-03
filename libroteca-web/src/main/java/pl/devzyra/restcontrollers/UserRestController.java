@@ -1,6 +1,7 @@
 package pl.devzyra.restcontrollers;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -11,6 +12,9 @@ import pl.devzyra.model.response.UserRest;
 import pl.devzyra.services.UserService;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 
@@ -42,6 +46,22 @@ public class UserRestController {
 
         return ResponseEntity.ok(returnVal);
 
+    }
+
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public List<UserRest> getAllUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "limit", defaultValue = "25") int limit) {
+
+        List<UserRest> returnValue = new ArrayList<>();
+
+        List<UserDto> users = userService.getUsers(page, limit);
+
+        users.stream().forEach(x -> {
+            UserRest userModel = modelMapper.map(x, UserRest.class);
+            returnValue.add(userModel);
+        });
+
+        return returnValue;
     }
 
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
