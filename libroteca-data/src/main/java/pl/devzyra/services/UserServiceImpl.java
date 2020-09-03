@@ -12,7 +12,6 @@ import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.entities.UserEntity;
-import pl.devzyra.model.response.UserRest;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
 

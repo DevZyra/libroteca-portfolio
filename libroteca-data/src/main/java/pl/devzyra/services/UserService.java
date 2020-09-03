@@ -5,7 +5,7 @@ import pl.devzyra.model.dto.UserDto;
 
 import java.util.List;
 
-@Repository
+
 public interface UserService {
 
     UserDto createUser(UserDto userDto);
