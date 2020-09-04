@@ -7,4 +7,6 @@ public interface BookService {
 
     BookRest createBook(BookRequestModel bookRequest);
 
+    void deleteBook(Long bookId);
+
 }

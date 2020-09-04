@@ -1,15 +1,12 @@
 package pl.devzyra.model.dto;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1836044288747480188L;

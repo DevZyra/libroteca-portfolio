@@ -3,6 +3,7 @@ package pl.devzyra.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import pl.devzyra.exceptions.BookServiceException;
+import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.entities.AuthorEntity;
 import pl.devzyra.model.entities.BookEntity;
 import pl.devzyra.model.request.BookRequestModel;
@@ -10,10 +11,11 @@ import pl.devzyra.model.response.BookRest;
 import pl.devzyra.repositories.AuthorRepository;
 import pl.devzyra.repositories.BookRepository;
 
-import java.awt.print.Book;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
 
 @Service
@@ -51,5 +53,16 @@ public class BookServiceImpl implements BookService {
 
 
         return returnVal;
+    }
+
+    @Override
+    public void deleteBook(Long bookId) {
+        Optional<BookEntity> bookEntity = bookRepository.findById(bookId);
+
+        if (bookEntity.isEmpty()) {
+            throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+
+        bookRepository.delete(bookEntity.get());
     }
 }
