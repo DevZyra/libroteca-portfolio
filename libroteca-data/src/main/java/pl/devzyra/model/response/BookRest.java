@@ -1,7 +1,7 @@
 package pl.devzyra.model.response;
 
 import lombok.Data;
-import pl.devzyra.model.request.AuthorRequestModel;
+import pl.devzyra.model.entities.AuthorEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +11,6 @@ public class BookRest {
 
     private String title;
     private String isbn;
-    private Set<AuthorRequestModel> authors = new HashSet<>();
+    private Set<AuthorEntity> authors = new HashSet<>();
 
 }

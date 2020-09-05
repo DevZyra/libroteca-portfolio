@@ -1,5 +1,6 @@
 package pl.devzyra.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class BookEntity {
     @ManyToMany
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "books_id"),
     inverseJoinColumns = @JoinColumn(name = "authors_id"))
+    @JsonManagedReference
     private Set<AuthorEntity> authors = new HashSet<>();
 
     @ManyToMany(mappedBy = "books")

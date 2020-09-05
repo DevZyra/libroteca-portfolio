@@ -1,6 +1,9 @@
 package pl.devzyra.services;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.UserServiceException;
@@ -11,6 +14,7 @@ import pl.devzyra.model.response.BookRest;
 import pl.devzyra.repositories.AuthorRepository;
 import pl.devzyra.repositories.BookRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -64,5 +68,15 @@ public class BookServiceImpl implements BookService {
         }
 
         bookRepository.delete(bookEntity.get());
+    }
+
+    @Override
+    public List<BookEntity> findAll(int page, int limit) {
+
+
+        Pageable pageableRequest = PageRequest.of(page, limit);
+        Page<BookEntity> bookPage = bookRepository.findAll(pageableRequest);
+
+        return bookPage.getContent();
     }
 }

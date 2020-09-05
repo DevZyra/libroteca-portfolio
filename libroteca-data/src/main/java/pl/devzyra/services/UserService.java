@@ -1,6 +1,5 @@
 package pl.devzyra.services;
 
-import org.springframework.stereotype.Repository;
 import pl.devzyra.model.dto.UserDto;
 
 import java.util.List;

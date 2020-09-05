@@ -1,5 +1,6 @@
 package pl.devzyra.restcontrollers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -10,6 +11,8 @@ import pl.devzyra.model.response.BookRest;
 import pl.devzyra.services.BookService;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 
@@ -18,9 +21,11 @@ import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 public class BookRestController {
 
     private final BookService bookService;
+    private final ModelMapper modelMapper;
 
-    public BookRestController(BookService bookService) {
+    public BookRestController(BookService bookService, ModelMapper modelMapper) {
         this.bookService = bookService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
@@ -36,11 +41,27 @@ public class BookRestController {
         return ResponseEntity.ok(returnVal);
 
     }
+
     @DeleteMapping("/{bookId}")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long bookId){
+    public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
 
         bookService.deleteBook(bookId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public List<BookRest> getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "limit", defaultValue = "25") int limit) {
+        List<BookRest> returnVal = new ArrayList<>();
+        List<BookEntity> bookList = bookService.findAll(page, limit);
+        bookList.stream().forEach(x -> {
+            BookRest bookRest = new BookRest();
+            bookRest = modelMapper.map(x, BookRest.class);
+            returnVal.add(bookRest);
+        });
+
+
+        return returnVal;
     }
 }
