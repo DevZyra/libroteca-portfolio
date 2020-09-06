@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.entities.AuthorEntity;
@@ -35,7 +36,7 @@ public class BookServiceImpl implements BookService {
         this.modelMapper = modelMapper;
     }
 
-
+    @Transactional
     @Override
     public BookRest createBook(BookRequestModel bookRequest) {
 
@@ -57,6 +58,18 @@ public class BookServiceImpl implements BookService {
 
 
         return returnVal;
+    }
+
+    @Override
+    public BookRest getBook(Long bookId) {
+
+        Optional<BookEntity> book = bookRepository.findById(bookId);
+        if (book.isEmpty()) {
+            throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+        BookEntity bookEntity = book.get();
+
+        return modelMapper.map(bookEntity, BookRest.class);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package pl.devzyra.model.request;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.ISBN;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 public class BookRequestModel {
 
     @NotEmpty(message = "{NotEmpty}")

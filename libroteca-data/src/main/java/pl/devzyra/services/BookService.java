@@ -10,8 +10,10 @@ public interface BookService {
 
     BookRest createBook(BookRequestModel bookRequest);
 
+    BookRest getBook(Long bookId);
+
     void deleteBook(Long bookId);
 
-    List<BookEntity> findAll(int page , int limit);
+    List<BookEntity> findAll(int page, int limit);
 
 }

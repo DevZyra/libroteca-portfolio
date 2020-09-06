@@ -50,6 +50,14 @@ public class BookRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookRest> getBookById(@PathVariable Long bookId) {
+
+        BookRest book = bookService.getBook(bookId);
+
+        return ResponseEntity.ok(book);
+    }
+
     @GetMapping
     public List<BookRest> getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
                                       @RequestParam(value = "limit", defaultValue = "25") int limit) {

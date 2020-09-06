@@ -19,7 +19,7 @@ public class BookEntity {
     private String title;
     private String isbn;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "books_id"),
     inverseJoinColumns = @JoinColumn(name = "authors_id"))
     @JsonManagedReference

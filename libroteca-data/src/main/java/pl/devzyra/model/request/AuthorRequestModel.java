@@ -14,4 +14,11 @@ public class AuthorRequestModel {
     @NotEmpty(message = "{NotEmpty}")
     private String lastName;
 
+    public AuthorRequestModel() {
+    }
+
+    public AuthorRequestModel(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
