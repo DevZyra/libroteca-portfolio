@@ -18,4 +18,8 @@ public interface BookRepository extends PagingAndSortingRepository<BookEntity, L
 
     @Query("from books b join b.authors")
     List<BookEntity> findAll();
+
+    List<BookEntity> findAllByTitleContainingIgnoreCase(String title);
+
+
 }
