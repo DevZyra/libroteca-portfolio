@@ -16,4 +16,8 @@ public interface BookService {
 
     List<BookEntity> findAll(int page, int limit);
 
+    List<BookRest> findBooksByTitle(String title);
+
+    List<BookRest> findBooksByAuthor(String author);
+
 }

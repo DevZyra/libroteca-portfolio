@@ -1,6 +1,7 @@
 package pl.devzyra.services;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import pl.devzyra.model.response.BookRest;
 import pl.devzyra.repositories.AuthorRepository;
 import pl.devzyra.repositories.BookRepository;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -91,5 +94,45 @@ public class BookServiceImpl implements BookService {
         Page<BookEntity> bookPage = bookRepository.findAll(pageableRequest);
 
         return bookPage.getContent();
+    }
+
+    @Override
+    public List<BookRest> findBooksByTitle(String title) {
+        List<BookRest> returnVal = new ArrayList<>();
+
+        List<BookEntity> booksByTitle = bookRepository.findAllByTitleContainingIgnoreCase(title);
+
+        if (booksByTitle.isEmpty()) {
+            throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+
+        booksByTitle.forEach(b -> {
+            BookRest bookRest = modelMapper.map(b, BookRest.class);
+            returnVal.add(bookRest);
+        });
+
+
+        return returnVal;
+    }
+
+    @Override
+    public List<BookRest> findBooksByAuthor(String author) {
+        List<BookRest> returnVal = new ArrayList<>();
+
+        Type listType = new TypeToken<List<BookRest>>() {
+        }.getType();
+
+        List<AuthorEntity> authorsFound = authorRepository.findAllByFirstNameOrLastNameContainingIgnoreCase(author, author);
+
+        if (authorsFound.isEmpty()) {
+            throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+
+        authorsFound.stream().forEach(a -> {
+            List<BookRest> bookRest = modelMapper.map(a.getBooks(), listType);
+            returnVal.addAll(bookRest);
+        });
+
+        return returnVal;
     }
 }
