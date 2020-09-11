@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <styles>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+                integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+                integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+                integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+                crossorigin="anonymous"></script>
+    </styles>
+</head>
+<body>
+
+
+<div class="container">
+
+    <!--/*@thymesVar id="user" type="pl.devzyra.model.request.UserDetailsRequestModel"*/-->
+    <form role="form" method="POST" th:action="@{/users/new}" th:object="${user}">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" th:class="${#fields.hasErrors('firstName')}
+                                ? 'form-control is-invalid' : 'form-control'"
+                       th:field="*{firstName}" id="firstName"
+                       placeholder="First name...">
+                <div th:if="${#fields.hasErrors('firstName')}">
+                    <p th:each="err : ${#fields.errors('firstName')}">
+                        <span th:text="${err}"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" th:class="${#fields.hasErrors('lastName')}
+                                ? 'form-control is-invalid' : 'form-control'"
+                       th:field="*{lastName}" id="lastName" placeholder="Last name...">
+                <div th:if="${#fields.hasErrors('lastName')}">
+                    <p th:each="err : ${#fields.errors('lastName')}">
+                        <span th:text="${err}"></span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="text" class="form-control" th:class="${#fields.hasErrors('email')}
+                                ? 'form-control is-invalid' : 'form-control'"
+                   th:field="*{email}" id="email" aria-describedby="emailHelp">
+            <div th:if="${#fields.hasErrors('email')}">
+                <p th:each="err : ${#fields.errors('email')}">
+                    <span th:text="${err}"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="text" class="form-control" th:class="${#fields.hasErrors('password')}
+                                ? 'form-control is-invalid' : 'form-control'"
+                   th:field="*{password}" id="password">
+            <div th:if="${#fields.hasErrors('password')}">
+                <p th:each="err : ${#fields.errors('password')}">
+                    <span th:text="${err}"></span>
+                </p>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="street">Street name</label>
+            <input type="text" class="form-control"  th:field="*{addresses[0].streetName}" id="street"
+                   placeholder="ie. Your street 11/1">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="city">City</label>
+                <input type="text" class="form-control" th:class="${#fields.hasErrors('*{addresses[0].city}')}
+                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].city}" id="city">
+                <div th:if="${#fields.hasErrors('*{addresses[0].city}')}">
+                    <p th:each="err : ${#fields.errors('*{addresses[0].city}')}">
+                        <span th:text="${err}"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="country">Country</label>
+                <input type="text" class="form-control" th:class="${#fields.hasErrors('*{addresses[0].country}')}
+                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].country}" id="country">
+                <div th:if="${#fields.hasErrors('*{addresses[0].country}')}">
+                    <p th:each="err : ${#fields.errors('*{addresses[0].country}')}">
+                        <span th:text="${err}"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="zip">Zip</label>
+                <input type="text" class="form-control" th:class="${#fields.hasErrors('*{addresses[0].zipCode}')}
+                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].zipCode}" id="zip">
+            </div>
+            <div th:if="${#fields.hasErrors('*{addresses[0].zipCode}')}">
+                <p th:each="err : ${#fields.errors('*{addresses[0].zipCode}')}">
+                    <span th:text="${err}"></span>
+                </p>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>
