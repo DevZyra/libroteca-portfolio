@@ -11,4 +11,5 @@ public interface AuthorRepository extends CrudRepository<AuthorEntity, Long> {
 
     List<AuthorEntity> findAllByFirstNameOrLastNameContainingIgnoreCase(String firstName, String lastName);
 
+
 }

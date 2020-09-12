@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ public class AuthorEntity {
     @ManyToMany(mappedBy = "authors")
     @JsonBackReference
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<BookEntity> books = new HashSet<>();
 
     public AuthorEntity() {

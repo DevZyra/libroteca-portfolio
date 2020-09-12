@@ -1,6 +1,5 @@
 package pl.devzyra.restcontrollers;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +16,10 @@ import java.util.List;
 public class SearchController {
 
     private final BookService bookService;
-    private final ModelMapper modelMapper;
 
 
-    public SearchController(BookService bookService, ModelMapper modelMapper) {
+    public SearchController(BookService bookService) {
         this.bookService = bookService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE})

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -50,7 +50,55 @@
             </li>
         </ul>
     </div>
+
 </nav>
+
+<div class="container-fluid">
+    ...
+
+    <form class="form-inline" th:action="@{'/searchMvc'}" method="get">
+
+        <label class="my-1 mr-2" for="searchBy">Search by: </label>
+
+        <select class="custom-select my-1 mr-sm-2" id="searchBy" name="searchBy">
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+        </select>
+
+        <label class="sr-only" for="name">Name</label>
+        <input type="text" class="form-control my-1 mr-sm-2" id="name" name="name" placeholder="....">
+
+
+        <button type="submit" class="btn btn-primary mr-sm-2">Submit</button>
+
+    </form>
+
+    <div class="container">
+        <h2>List of books</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!--/*@thymesVar id="books" type="pl.devzyra.model.response.BookRest"*/-->
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}">Title</td>
+                <td> <span th:unless="${#lists.isEmpty(book.authors)}" th:each="author : ${book.authors}" th:text="${author.firstName} + ' ' + ${author.lastName} + '   '"> </span> </td>
+                <td><a href="#">Issue</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+</div>
+
 </body>
 
 
