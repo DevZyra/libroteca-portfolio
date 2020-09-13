@@ -12,13 +12,13 @@ import pl.devzyra.services.BookService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/search")
-public class SearchController {
+@RequestMapping("rest/search")
+public class SearchRestController {
 
     private final BookService bookService;
 
 
-    public SearchController(BookService bookService) {
+    public SearchRestController(BookService bookService) {
         this.bookService = bookService;
     }
 

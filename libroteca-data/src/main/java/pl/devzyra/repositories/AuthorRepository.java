@@ -1,5 +1,6 @@
 package pl.devzyra.repositories;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import pl.devzyra.model.entities.AuthorEntity;
@@ -11,5 +12,6 @@ public interface AuthorRepository extends CrudRepository<AuthorEntity, Long> {
 
     List<AuthorEntity> findAllByFirstNameOrLastNameContainingIgnoreCase(String firstName, String lastName);
 
-
+    @Query("select a from authors a where concat(lower(a.firstName) , ' ' , lower( a.lastName)) like lower(concat('%', :author,'%'))  ")
+    List<AuthorEntity> findAllByAuthorFullName(String author);
 }

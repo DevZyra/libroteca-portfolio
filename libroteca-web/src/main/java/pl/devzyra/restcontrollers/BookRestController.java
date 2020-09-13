@@ -17,7 +17,7 @@ import java.util.List;
 import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/rest/books")
 public class BookRestController {
 
     private final BookService bookService;

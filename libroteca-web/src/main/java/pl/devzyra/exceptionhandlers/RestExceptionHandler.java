@@ -11,13 +11,13 @@ import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.ErrorDetails;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.restcontrollers.BookRestController;
-import pl.devzyra.restcontrollers.SearchController;
+import pl.devzyra.restcontrollers.SearchRestController;
 import pl.devzyra.restcontrollers.UserRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@ControllerAdvice(assignableTypes = {BookRestController.class, UserRestController.class, SearchController.class})
+@ControllerAdvice(assignableTypes = {BookRestController.class, UserRestController.class, SearchRestController.class})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RestExceptionHandler {
 

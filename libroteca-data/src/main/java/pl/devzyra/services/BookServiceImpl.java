@@ -122,7 +122,7 @@ public class BookServiceImpl implements BookService {
         Type listType = new TypeToken<List<BookRest>>() {
         }.getType();
 
-        List<AuthorEntity> authorsFound = authorRepository.findAllByFirstNameOrLastNameContainingIgnoreCase(author, author);
+        List<AuthorEntity> authorsFound = authorRepository.findAllByAuthorFullName(author);
 
         if (authorsFound.isEmpty()) {
             throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());

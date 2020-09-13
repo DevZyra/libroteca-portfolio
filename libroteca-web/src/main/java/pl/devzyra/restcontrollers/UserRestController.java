@@ -1,7 +1,6 @@
 package pl.devzyra.restcontrollers;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,14 +11,13 @@ import pl.devzyra.model.response.UserRest;
 import pl.devzyra.services.UserService;
 
 import javax.validation.Valid;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("rest/users")
 public class UserRestController {
 
     private final UserService userService;

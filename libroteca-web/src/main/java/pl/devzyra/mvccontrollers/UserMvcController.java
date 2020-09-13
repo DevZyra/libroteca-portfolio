@@ -15,14 +15,14 @@ import javax.validation.Valid;
 
 
 @Controller
-public class UserController {
+public class UserMvcController {
 
     private final String VIEW_USER_FORM = "signupform";
 
     private final UserService userService;
     private final ModelMapper modelMapper;
 
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserMvcController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
         this.modelMapper = modelMapper;
     }
