@@ -17,10 +17,7 @@ import pl.devzyra.repositories.AuthorRepository;
 import pl.devzyra.repositories.BookRepository;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
@@ -119,10 +116,18 @@ public class BookServiceImpl implements BookService {
     public List<BookRest> findBooksByAuthor(String author) {
         List<BookRest> returnVal = new ArrayList<>();
 
+        List<String> authorStrings = Arrays.asList(author.split(" "));
+
         Type listType = new TypeToken<List<BookRest>>() {
         }.getType();
 
-        List<AuthorEntity> authorsFound = authorRepository.findAllByAuthorFullName(author);
+        List<AuthorEntity> authorsFound = new ArrayList<>();
+
+        authorStrings.forEach(s -> {
+            List<AuthorEntity> allByAuthorFullName = authorRepository.findAllByAuthorFullName(s);
+            authorsFound.addAll(allByAuthorFullName);
+        });
+
 
         if (authorsFound.isEmpty()) {
             throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());

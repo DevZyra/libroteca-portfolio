@@ -9,6 +9,7 @@ import java.util.Set;
 @Data
 public class BookRest {
 
+    private Long id;
     private String title;
     private String isbn;
     private Set<AuthorEntity> authors = new HashSet<>();
