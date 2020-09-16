@@ -23,18 +23,6 @@ public class SearchMvcController {
         this.bookService = bookService;
     }
 
-/*
-    @GetMapping
-    @RequestMapping
-    String searchSome(Model model) {
-
-        List<BookRest> books = bookService.findBooksByTitle("Book");
-
-        model.addAttribute("books", books);
-
-
-        return "booklist";
-    }*/
 
     @GetMapping
     @RequestMapping("/searchMvc")
@@ -52,7 +40,12 @@ public class SearchMvcController {
 
         }
 
-        model.addAttribute("books", books);
+        if (books.isEmpty()) {
+            model.addAttribute("books", new BookRest(0L, "[NO RECORD/S FOUND]"));
+        } else {
+
+            model.addAttribute("books", books);
+        }
 
 
         return "index";

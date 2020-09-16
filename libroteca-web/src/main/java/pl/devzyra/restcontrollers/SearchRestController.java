@@ -6,10 +6,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.devzyra.exceptions.BookServiceException;
+import pl.devzyra.exceptions.ErrorMessages;
 import pl.devzyra.model.response.BookRest;
 import pl.devzyra.services.BookService;
 
 import java.util.List;
+
+import static pl.devzyra.exceptions.ErrorMessages.*;
 
 @RestController
 @RequestMapping("rest/search")
@@ -28,6 +32,9 @@ public class SearchRestController {
 
 
         List<BookRest> returnVal = bookService.findBooksByTitle(title);
+        if(returnVal.isEmpty()){
+            throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
 
         return ResponseEntity.ok(returnVal);
     }

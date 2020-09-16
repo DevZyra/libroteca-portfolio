@@ -14,4 +14,13 @@ public class BookRest {
     private String isbn;
     private Set<AuthorEntity> authors = new HashSet<>();
 
+    public BookRest() {
+    }
+
+    public BookRest(Long id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+
 }

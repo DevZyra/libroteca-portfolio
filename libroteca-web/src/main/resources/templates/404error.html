@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link href="../static/css/csse.css" th:href="@{/css/csse.css}" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata:400,700" rel="stylesheet">
+
+</head>
+<body>
+
+<!--/*@thymesVar id="err" type="pl.devzyra.exceptions.ErrorDetails"*/-->
+<div id="error" th:object="${err}">
+    <div id="box"></div>
+    <h3>ERROR <span>404</span></h3>
+
+    <p>Something went wrong : </p> <span th:text="*{message}"> </span>
+
+
+    <button type="submit" class="btn btn-primary mr-sm-2"><- BACK</button>
+
+</div>
+
+</body>
+</html>

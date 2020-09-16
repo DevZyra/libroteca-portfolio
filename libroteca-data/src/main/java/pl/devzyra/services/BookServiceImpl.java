@@ -99,9 +99,6 @@ public class BookServiceImpl implements BookService {
 
         List<BookEntity> booksByTitle = bookRepository.findAllByTitleContainingIgnoreCase(title);
 
-        if (booksByTitle.isEmpty()) {
-            throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());
-        }
 
         booksByTitle.forEach(b -> {
             BookRest bookRest = modelMapper.map(b, BookRest.class);
@@ -127,11 +124,6 @@ public class BookServiceImpl implements BookService {
             List<AuthorEntity> allByAuthorFullName = authorRepository.findAllByAuthorFullName(s);
             authorsFound.addAll(allByAuthorFullName);
         });
-
-
-        if (authorsFound.isEmpty()) {
-            throw new BookServiceException(NO_RECORD_FOUND.getErrorMessage());
-        }
 
         authorsFound.stream().forEach(a -> {
             List<BookRest> bookRest = modelMapper.map(a.getBooks(), listType);
