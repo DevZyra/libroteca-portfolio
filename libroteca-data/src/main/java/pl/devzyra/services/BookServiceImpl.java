@@ -94,6 +94,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public BookEntity findByBookId(Long bookId) {
+        return bookRepository.findById(bookId).get();
+    }
+
+    @Override
     public List<BookRest> findBooksByTitle(String title) {
         List<BookRest> returnVal = new ArrayList<>();
 

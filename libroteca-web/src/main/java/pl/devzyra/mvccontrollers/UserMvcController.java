@@ -1,17 +1,23 @@
 package pl.devzyra.mvccontrollers;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
+import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
+import pl.devzyra.model.request.AddressRequestModel;
 import pl.devzyra.model.request.UserDetailsRequestModel;
 import pl.devzyra.services.UserService;
 
 import javax.validation.Valid;
+import java.lang.reflect.Type;
+import java.util.List;
 
 
 @Controller
@@ -37,13 +43,24 @@ public class UserMvcController {
 
     @PostMapping("/users/new")
     public String processUserCreation(@Valid @ModelAttribute("user") UserDetailsRequestModel user, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             return VIEW_USER_FORM;
         }
 
-        UserDto userDto = modelMapper.map(user, UserDto.class);
-        userService.createUser(userDto);
+        List<AddressRequestModel> addresses = user.getAddresses();
 
-        return "index";
+        Type listType = new TypeToken<List<AddressDto>>() {}.getType();
+        List<AddressDto> dtos = modelMapper.map(addresses, listType);
+
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+        userDto.setAddresses(dtos);
+        UserDto created = userService.createUser(userDto);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("user", user);
+
+
+        return "signupconfirm";
     }
 }

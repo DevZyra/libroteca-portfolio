@@ -1,5 +1,6 @@
 package pl.devzyra.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UserDetailsRequestModel {
 
     @NotEmpty(message = "{NotEmpty}")
@@ -28,5 +30,9 @@ public class UserDetailsRequestModel {
     private String password;
     @Valid
     private List<AddressRequestModel> addresses = new ArrayList<>();
+
+    public UserDetailsRequestModel() {
+    }
+
 
 }

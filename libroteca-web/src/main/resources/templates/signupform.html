@@ -16,12 +16,48 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
                 integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
                 crossorigin="anonymous"></script>
+        <style>
+            .mt-0 {
+                margin-top: 0 !important;
+            }
+
+        </style>
     </styles>
 </head>
 <body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Libroteca</a>
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="//localhost:8080/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Tech</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Kontakt</a>
+            </li>
+        </ul>
+    </div>
 
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="//localhost:8080/signup"><span class="glyphicon glyphicon-user"><i
+                        class="fas fa-users"></i></span>
+                    Sign Up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#"><span class="glyphicon glyphicon-log-in"><i class="fas fa-sign-in-alt"></i></span>
+                    Login</a>
+            </li>
+        </ul>
+    </div>
 
-<div class="container">
+</nav>
+
+<div class="container" id="">
 
     <!--/*@thymesVar id="user" type="pl.devzyra.model.request.UserDetailsRequestModel"*/-->
     <form role="form" method="POST" th:action="@{/users/new}" th:object="${user}">

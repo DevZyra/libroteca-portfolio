@@ -1,12 +1,14 @@
 package pl.devzyra.model.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1836044288747480188L;
@@ -20,6 +22,9 @@ public class UserDto implements Serializable {
     private String encryptedPassword;
     private String emailVerificationToken;
     private Boolean emailVerificationStatus = false;
+
     private List<AddressDto> addresses = new ArrayList<>();
 
+    public UserDto() {
+    }
 }

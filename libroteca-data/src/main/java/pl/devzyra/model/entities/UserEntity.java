@@ -1,13 +1,18 @@
 package pl.devzyra.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity(name = "users")
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 public class UserEntity {
 
     @Id
@@ -30,4 +35,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<OrderEntity> order;
+
+    public UserEntity() {
+    }
 }

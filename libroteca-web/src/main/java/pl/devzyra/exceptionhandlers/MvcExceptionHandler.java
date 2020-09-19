@@ -25,7 +25,7 @@ public class MvcExceptionHandler {
     protected ModelAndView handleNotFound(Exception e, HttpServletRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());
 
-        ModelAndView modelAndView = new ModelAndView("400error");
+        ModelAndView modelAndView = new ModelAndView("404error");
         modelAndView.addObject("err", errorDetails);
 
 
@@ -38,7 +38,7 @@ public class MvcExceptionHandler {
     public ModelAndView handleUserException(Exception e, HttpServletRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());
 
-        ModelAndView modelAndView = new ModelAndView("404error");
+        ModelAndView modelAndView = new ModelAndView("400error");
         modelAndView.addObject("err", errorDetails);
 
 

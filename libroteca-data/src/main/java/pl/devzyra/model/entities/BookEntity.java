@@ -2,6 +2,8 @@ package pl.devzyra.model.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class BookEntity {
     private Set<AuthorEntity> authors = new HashSet<>();
 
     @ManyToMany(mappedBy = "books")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<OrderEntity> orders = new ArrayList<>();
 
     public BookEntity() {
