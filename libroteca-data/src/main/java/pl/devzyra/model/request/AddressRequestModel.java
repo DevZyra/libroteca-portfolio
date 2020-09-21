@@ -1,6 +1,5 @@
 package pl.devzyra.model.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,6 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class AddressRequestModel {
 
     @NotEmpty(message = "{NotEmpty}")
@@ -17,10 +15,10 @@ public class AddressRequestModel {
     @NotEmpty(message = "{NotEmpty}")
     private String country;
     private String streetName;
-    @Pattern(regexp = "^[a-zA-Z0-9]{6}", message = "{Zipcode}")
-    private String zipCode;
+    @Pattern(message = "{code.valid}", regexp = "\\d{2}-\\d{3}")
+    private String zipcode;
 
-
+    
     public AddressRequestModel() {
     }
 

@@ -17,10 +17,14 @@
                 integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
                 crossorigin="anonymous"></script>
         <style>
-            .mt-0 {
-                margin-top: 0 !important;
+            .navbar {
+                margin-bottom: 30px;
             }
 
+            .container {
+                width: 40%;
+                padding: 10px;
+            }
         </style>
     </styles>
 </head>
@@ -49,7 +53,7 @@
                     Sign Up</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><span class="glyphicon glyphicon-log-in"><i class="fas fa-sign-in-alt"></i></span>
+                <a class="nav-link" href="//localhost:8080/login"><span class="glyphicon glyphicon-log-in"><i class="fas fa-sign-in-alt"></i></span>
                     Login</a>
             </li>
         </ul>
@@ -57,10 +61,10 @@
 
 </nav>
 
-<div class="container" id="">
+<div class="container align-middle">
 
     <!--/*@thymesVar id="user" type="pl.devzyra.model.request.UserDetailsRequestModel"*/-->
-    <form role="form" method="POST" th:action="@{/users/new}" th:object="${user}">
+    <form role="form" method="POST" th:action="@{/users}" th:object="${user}">
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for="firstName">First Name</label>
@@ -116,7 +120,7 @@
 
         <div class="form-group">
             <label for="street">Street name</label>
-            <input type="text" class="form-control"  th:field="*{addresses[0].streetName}" id="street"
+            <input type="text" class="form-control" th:field="*{addresses[0].streetName}" id="street"
                    placeholder="ie. Your street 11/1">
         </div>
 
@@ -134,26 +138,28 @@
             <div class="form-group col-md-4">
                 <label for="country">Country</label>
                 <input type="text" class="form-control" th:class="${#fields.hasErrors('*{addresses[0].country}')}
-                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].country}" id="country">
+                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].country}"
+                       id="country">
                 <div th:if="${#fields.hasErrors('*{addresses[0].country}')}">
                     <p th:each="err : ${#fields.errors('*{addresses[0].country}')}">
                         <span th:text="${err}"></span>
                     </p>
                 </div>
             </div>
+
             <div class="form-group col-md-2">
                 <label for="zip">Zip</label>
-                <input type="text" class="form-control" th:class="${#fields.hasErrors('*{addresses[0].zipCode}')}
-                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].zipCode}" id="zip">
+                <input type="text" class="form-control" th:class="${#fields.hasErrors('*{addresses[0].zipcode}')}
+                                ? 'form-control is-invalid' : 'form-control'" th:field="*{addresses[0].zipcode}"
+                       id="zip">
+                <div th:if="${#fields.hasErrors('*{addresses[0].zipcode}')}">
+                    <p th:each="err : ${#fields.errors('*{addresses[0].zipcode}')}">
+                        <span th:text="${err}"></span>
+                    </p>
+                </div>
             </div>
-            <div th:if="${#fields.hasErrors('*{addresses[0].zipCode}')}">
-                <p th:each="err : ${#fields.errors('*{addresses[0].zipCode}')}">
-                    <span th:text="${err}"></span>
-                </p>
-            </div>
-        </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 </body>

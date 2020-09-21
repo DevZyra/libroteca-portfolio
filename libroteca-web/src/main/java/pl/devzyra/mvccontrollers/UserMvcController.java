@@ -24,6 +24,8 @@ import java.util.List;
 public class UserMvcController {
 
     private final String VIEW_USER_FORM = "signupform";
+    private final String SIGNUP_CONFIRM = "signupconfirm";
+    private final String LOGIN_PAGE = "login";
 
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -41,7 +43,15 @@ public class UserMvcController {
         return VIEW_USER_FORM;
     }
 
-    @PostMapping("/users/new")
+    @GetMapping("/login")
+    public String logUser() {
+
+
+        return LOGIN_PAGE;
+    }
+
+
+    @PostMapping("/users")
     public String processUserCreation(@Valid @ModelAttribute("user") UserDetailsRequestModel user, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
@@ -50,17 +60,19 @@ public class UserMvcController {
 
         List<AddressRequestModel> addresses = user.getAddresses();
 
-        Type listType = new TypeToken<List<AddressDto>>() {}.getType();
+        Type listType = new TypeToken<List<AddressDto>>() {
+        }.getType();
         List<AddressDto> dtos = modelMapper.map(addresses, listType);
 
         UserDto userDto = modelMapper.map(user, UserDto.class);
         userDto.setAddresses(dtos);
-        UserDto created = userService.createUser(userDto);
+
+        userService.createUser(userDto);
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("user", user);
 
 
-        return "signupconfirm";
+        return SIGNUP_CONFIRM;
     }
 }
