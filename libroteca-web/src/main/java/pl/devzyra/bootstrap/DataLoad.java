@@ -1,32 +1,65 @@
 package pl.devzyra.bootstrap;
 
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import pl.devzyra.model.entities.UserEntity;
 import pl.devzyra.model.request.AuthorRequestModel;
 import pl.devzyra.model.request.BookRequestModel;
 import pl.devzyra.repositories.BookRepository;
+import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.services.BookService;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
-public class DataLoad implements CommandLineRunner {
+import static pl.devzyra.model.entities.UserRole.ADMIN;
 
+@Component
+public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
+
+    boolean alreadySetup = false;
+
+    private UserRepository userRepository;
     private BookRepository bookRepository;
     private BookService bookService;
+    private PasswordEncoder passwordEncoder;
 
-    public DataLoad(BookRepository bookRepository, BookService bookService) {
+    public DataLoad(UserRepository userRepository, BookRepository bookRepository, BookService bookService, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.bookRepository = bookRepository;
-
         this.bookService = bookService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
-    public void run(String... args) throws Exception {
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+
+        if (alreadySetup)
+            return;
+
+        UserEntity admin = new UserEntity();
+        admin.setFirstName("admin");
+        admin.setLastName("admin");
+        admin.setUserId("admin");
+        admin.setEmail("admin");
+        admin.setEmailVerificationStatus(true);
+        admin.setEncryptedPassword(passwordEncoder.encode("admin"));
+        admin.setAddresses(new ArrayList<>());
+        admin.setRole(ADMIN);
+
+        userRepository.save(admin);
+
+        // @PrePersist role setup override
+        admin.setRole(ADMIN);
+        userRepository.save(admin);
 
         loadDataifEmpty();
+
+        alreadySetup = true;
 
 
     }
@@ -56,4 +89,6 @@ public class DataLoad implements CommandLineRunner {
 
         }
     }
+
+
 }

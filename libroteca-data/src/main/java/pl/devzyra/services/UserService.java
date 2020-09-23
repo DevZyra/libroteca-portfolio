@@ -1,11 +1,12 @@
 package pl.devzyra.services;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.devzyra.model.dto.UserDto;
 
 import java.util.List;
 
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserDto createUser(UserDto userDto);
 
@@ -15,5 +16,5 @@ public interface UserService {
 
     void deleteUser(String userId);
 
-    List<UserDto> getUsers(int page , int limit);
+    List<UserDto> getUsers(int page, int limit);
 }
