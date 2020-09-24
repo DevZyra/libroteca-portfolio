@@ -34,32 +34,30 @@ public class OrderMvcController {
 
 
     @GetMapping("/order/add/{bookId}")
-    public void addBookToOrder(@ModelAttribute("order") OrderEntity order, Model model, @PathVariable Long bookId, Principal principal) {
-
-        final String currentUser = principal.getName();
-
-        // todo: impl. addToCart
-        UserEntity principalUser = userRepository.findByEmail(currentUser);
+    public String addBookToOrder(@ModelAttribute("order") OrderEntity order, @PathVariable Long bookId, Principal principal) {
 
 
-        order.setUser(principalUser);
+        UserEntity user = userRepository.findByEmail(principal.getName());
+
+        order.setUser(user);
         order.getBooks().add(bookService.findByBookId(bookId));
 
+
+        return "index";
     }
 
 
     @GetMapping("/order")
-    public void showOrder(@ModelAttribute("order") OrderEntity order, Model model) {
+    public String showOrder(@ModelAttribute("order") OrderEntity order, Model model) {
 
-        model.addAttribute("books", order.getBooks());
+        model.addAttribute("orderlist", order.getBooks());
 
-        // todo: impl. show Cart and confirm, return view cart
-
-
+        return "orderview";
     }
 
+
     @PostMapping("/order/confirm")
-    public void confirmOrder(@ModelAttribute("order") OrderEntity order, Model model) {
+    public void confirmOrder(@ModelAttribute("order") OrderEntity order) {
 
         orderService.saveOrder(order);
 

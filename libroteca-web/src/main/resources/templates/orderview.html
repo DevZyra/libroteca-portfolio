@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/f592291c08.js" crossorigin="anonymous"></script>
+
     <styles>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
                 integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -16,17 +18,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
                 integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
                 crossorigin="anonymous"></script>
-
-        <style>
-            .my-3 {
-                position: absolute;
-                left: 50%;
-                transform: translate(-50%, 0);
-            }
-        </style>
-
     </styles>
-
 
 </head>
 <body>
@@ -68,21 +60,28 @@
             </li>
         </ul>
     </div>
-
 </nav>
 
 
-<div class="my-3" id="my-3" method="get" th:object="${user}">
+<table class="table table-striped table-dark">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Authors</th>
+    </tr>
+    </thead>
+    <tbody>
 
-    <p><strong>Congratulations! </strong> Your registration was successful. Please check your email : <strong><span
-            th:text="*{email}"> </span> </strong> for confirmation link.</p>
+    <tr th:each="orderItem,rowStat : ${orderlist}">
+        <td th:text="${rowStat.count}">#</td>
+        <td th:text="${orderItem.title}">Title</td>
+        <td><span th:unless="${#lists.isEmpty(orderItem.authors)}" th:each="author : ${orderItem.authors}"
+                  th:text="${author.firstName} + ' ' + ${author.lastName} + '   '"> </span></td>
+    </tr>
+    </tbody>
+</table>
 
-    <p><strong>FirstName:</strong> <span th:text="*{firstName}"></span></p>
-    <p><strong>LastName:</strong> <span th:text="*{lastName}"></span></p>
-
-    <a th:href="@{/}">Go to main.</a>
-
-</div>
 
 </body>
 </html>

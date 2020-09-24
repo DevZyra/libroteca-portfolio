@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class UserEntity implements UserDetails {
     private List<AddressEntity> addresses;
 
     @OneToMany(mappedBy = "user")
-    private List<OrderEntity> order;
+    public List<OrderEntity> order = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

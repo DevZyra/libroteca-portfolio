@@ -24,4 +24,8 @@ public class OrderEntity {
             inverseJoinColumns = @JoinColumn(name = "users_id"))
     private UserEntity user;
 
+    public OrderEntity() {
+    }
+
+
 }
