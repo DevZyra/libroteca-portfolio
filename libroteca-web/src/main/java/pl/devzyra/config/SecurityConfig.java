@@ -5,12 +5,14 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.devzyra.filters.JwtRequestFilter;
 import pl.devzyra.services.UserService;
 
 @Configuration
@@ -19,10 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
+    private final JwtRequestFilter jwtRequestFilter;
 
-    public SecurityConfig(PasswordEncoder passwordEncoder, UserService userService) {
+    public SecurityConfig(PasswordEncoder passwordEncoder, UserService userService, JwtRequestFilter jwtRequestFilter) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
+        this.jwtRequestFilter = jwtRequestFilter;
     }
 
     @Override
@@ -30,41 +34,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .formLogin()
-                    .loginPage("/login").permitAll()
-                    .loginProcessingUrl("/login")
+                     .loginPage("/login").permitAll()
+                     .loginProcessingUrl("/login")
                 .and()
-                .logout()
+                    .logout()
                     .logoutUrl("/logout")
                     .logoutSuccessUrl("/")
                     .clearAuthentication(true)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
-
                 .and()
                 .authorizeRequests()
                     .antMatchers("/h-2console/**").hasAnyRole("ADMIN")
+                    .antMatchers("/login").permitAll()
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                     .antMatchers(HttpMethod.POST,"/users").permitAll()
+                    .antMatchers("/login-rest").permitAll()
                     .antMatchers("/activation").permitAll()
                 .anyRequest()
                 .authenticated();
 
-        http.headers().frameOptions().disable();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(userService);
-        return provider;
+      http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(daoAuthenticationProvider());
-
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 
     @Bean
@@ -74,4 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }

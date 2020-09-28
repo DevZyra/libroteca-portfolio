@@ -104,7 +104,11 @@
                 <td th:text="${book.title}">Title</td>
                 <td><span th:unless="${#lists.isEmpty(book.authors)}" th:each="author : ${book.authors}"
                           th:text="${author.firstName} + ' ' + ${author.lastName} + '   '"> </span></td>
-                <td><a href="#" th:href="@{'/order/add/' + ${book.id}}" >Issue</a></td>
+                <td>
+                        <form th:if="${book.id != 0}" method="post" th:action="@{'/order/add/' + ${book.id}}">
+                            <button  type="submit" class="btn btn-primary btn-sm">Issue</button>
+                        </form>
+                </td>
             </tr>
             </tbody>
         </table>

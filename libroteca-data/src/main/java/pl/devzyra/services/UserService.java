@@ -2,6 +2,7 @@ package pl.devzyra.services;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.devzyra.model.dto.UserDto;
+import pl.devzyra.model.entities.UserEntity;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface UserService extends UserDetailsService {
     void deleteUser(String userId);
 
     List<UserDto> getUsers(int page, int limit);
+
+    UserEntity getUserByEmail(String email);
 }

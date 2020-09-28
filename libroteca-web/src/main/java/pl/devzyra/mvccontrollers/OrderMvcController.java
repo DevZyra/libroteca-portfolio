@@ -3,12 +3,13 @@ package pl.devzyra.mvccontrollers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import pl.devzyra.model.entities.OrderEntity;
 import pl.devzyra.model.entities.UserEntity;
-import pl.devzyra.repositories.OrderRepository;
-import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.services.BookService;
 import pl.devzyra.services.OrderService;
+import pl.devzyra.services.UserService;
 
 import java.security.Principal;
 
@@ -17,12 +18,12 @@ import java.security.Principal;
 public class OrderMvcController {
 
     private final BookService bookService;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final OrderService orderService;
 
-    public OrderMvcController(BookService bookService, UserRepository userRepository, OrderRepository orderRepository, OrderService orderService) {
+    public OrderMvcController(BookService bookService, UserService userService, OrderService orderService) {
         this.bookService = bookService;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.orderService = orderService;
     }
 
@@ -33,17 +34,17 @@ public class OrderMvcController {
     }
 
 
-    @GetMapping("/order/add/{bookId}")
-    public String addBookToOrder(@ModelAttribute("order") OrderEntity order, @PathVariable Long bookId, Principal principal) {
+    @PostMapping("/order/add/{bookId}")
+    public RedirectView addBookToOrder(@ModelAttribute("order") OrderEntity order, @PathVariable Long bookId, RedirectAttributes ra) {
 
-
-        UserEntity user = userRepository.findByEmail(principal.getName());
-
-        order.setUser(user);
         order.getBooks().add(bookService.findByBookId(bookId));
 
 
-        return "index";
+        //  ra.addFlashAttribute("books", );
+        // todo: try to implement multiple redirection scenario searchMvc -> post: /order/add/{bookId} -> searchMvc
+
+        return new RedirectView("/", true);
+
     }
 
 
@@ -57,8 +58,12 @@ public class OrderMvcController {
 
 
     @PostMapping("/order/confirm")
-    public void confirmOrder(@ModelAttribute("order") OrderEntity order) {
+    public void confirmOrder(@ModelAttribute("order") OrderEntity order, Principal principal) {
 
+
+
+        UserEntity user = userService.getUserByEmail(principal.getName());
+        order.setUser(user);
         orderService.saveOrder(order);
 
         // todo: impl. show Cart and confirm

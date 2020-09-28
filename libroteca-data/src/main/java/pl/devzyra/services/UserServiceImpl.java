@@ -65,9 +65,7 @@ public class UserServiceImpl implements UserService {
 
         UserEntity stored = userRepository.save(userEntity);
 
-        UserDto returnVal = modelMapper.map(stored, UserDto.class);
-
-        return returnVal;
+        return modelMapper.map(stored, UserDto.class);
     }
 
     @Override
@@ -87,13 +85,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
     public UserDto getUserByUserId(String userId) {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
             throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
         }
-        UserDto returnVal = modelMapper.map(userEntity, UserDto.class);
-        return returnVal;
+        return modelMapper.map(userEntity, UserDto.class);
     }
 
 
