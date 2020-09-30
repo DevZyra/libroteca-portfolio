@@ -1,4 +1,4 @@
-package pl.devzyra.model.entities;
+package pl.devzyra.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

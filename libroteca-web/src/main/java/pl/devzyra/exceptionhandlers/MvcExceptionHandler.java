@@ -1,5 +1,6 @@
 package pl.devzyra.exceptionhandlers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,13 @@ import java.util.Date;
 
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
+@Slf4j
 public class MvcExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ModelAndView handleNotFound(Exception e, HttpServletRequest request) {
+        log.error("", e);
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());
 
         ModelAndView modelAndView = new ModelAndView("404error");
@@ -36,6 +39,7 @@ public class MvcExceptionHandler {
     @ExceptionHandler(value = {UserServiceException.class, BookServiceException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ModelAndView handleUserException(Exception e, HttpServletRequest request) {
+        log.error("", e);
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());
 
         ModelAndView modelAndView = new ModelAndView("400error");
@@ -48,6 +52,7 @@ public class MvcExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleInternalException(Exception e, HttpServletRequest request) {
+        log.error("", e);
 
 
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());

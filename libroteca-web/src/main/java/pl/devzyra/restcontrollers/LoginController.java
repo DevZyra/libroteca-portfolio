@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import pl.devzyra.filters.JwtUtils;
-import pl.devzyra.model.entities.UserLoginRequest;
+import pl.devzyra.model.request.UserLoginRequest;
 import pl.devzyra.services.UserService;
 
 import javax.servlet.http.HttpServletResponse;

@@ -1,10 +1,9 @@
 package pl.devzyra.mvccontrollers;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import pl.devzyra.model.entities.OrderEntity;
 import pl.devzyra.model.entities.UserEntity;
 import pl.devzyra.services.BookService;
@@ -15,17 +14,12 @@ import java.security.Principal;
 
 @Controller
 @SessionAttributes("order")
+@AllArgsConstructor
 public class OrderMvcController {
 
     private final BookService bookService;
     private final UserService userService;
     private final OrderService orderService;
-
-    public OrderMvcController(BookService bookService, UserService userService, OrderService orderService) {
-        this.bookService = bookService;
-        this.userService = userService;
-        this.orderService = orderService;
-    }
 
     @ModelAttribute("order")
     public OrderEntity getOrder() {
@@ -35,15 +29,11 @@ public class OrderMvcController {
 
 
     @PostMapping("/order/add/{bookId}")
-    public RedirectView addBookToOrder(@ModelAttribute("order") OrderEntity order, @PathVariable Long bookId, RedirectAttributes ra) {
+    public String addBookToOrder(@ModelAttribute("order") OrderEntity order, @PathVariable Long bookId) {
 
         order.getBooks().add(bookService.findByBookId(bookId));
 
-
-        //  ra.addFlashAttribute("books", );
-        // todo: try to implement multiple redirection scenario searchMvc -> post: /order/add/{bookId} -> searchMvc
-
-        return new RedirectView("/", true);
+        return "index";
 
     }
 
@@ -52,22 +42,23 @@ public class OrderMvcController {
     public String showOrder(@ModelAttribute("order") OrderEntity order, Model model) {
 
         model.addAttribute("orderlist", order.getBooks());
+        model.addAttribute("order", order);
 
         return "orderview";
     }
 
 
     @PostMapping("/order/confirm")
-    public void confirmOrder(@ModelAttribute("order") OrderEntity order, Principal principal) {
+    public String confirmOrder(@ModelAttribute("order") OrderEntity order, Principal principal) {
 
 
-
+//        OrderEntity order = orderService.getOrderById(orderId);
         UserEntity user = userService.getUserByEmail(principal.getName());
         order.setUser(user);
         orderService.saveOrder(order);
 
         // todo: impl. show Cart and confirm
-
+        return "index";
 
     }
 
