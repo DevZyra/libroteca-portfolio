@@ -6,6 +6,7 @@ import pl.devzyra.exceptions.ErrorMessages;
 import pl.devzyra.model.entities.OrderEntity;
 import pl.devzyra.repositories.OrderRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,5 +31,10 @@ public class OrderServiceImpl implements OrderService {
         } else {
             throw new BookServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
         }
+    }
+
+    @Override
+    public List<OrderEntity> getAllOrders() {
+       return orderRepository.findAll();
     }
 }

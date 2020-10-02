@@ -1,5 +1,6 @@
 package pl.devzyra.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +38,7 @@ public class UserEntity implements UserDetails {
     private List<AddressEntity> addresses;
 
     @OneToMany(mappedBy = "user")
+    @JsonBackReference
     public List<OrderEntity> order = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

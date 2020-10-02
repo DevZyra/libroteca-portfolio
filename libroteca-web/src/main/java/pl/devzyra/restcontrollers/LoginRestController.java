@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.devzyra.filters.JwtUtils;
 import pl.devzyra.model.request.UserLoginRequest;
@@ -16,20 +17,21 @@ import javax.servlet.http.HttpServletResponse;
 
 
 @RestController
-public class LoginController {
+@RequestMapping("/rest")
+public class LoginRestController {
 
 
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
-    public LoginController(JwtUtils jwtUtils, AuthenticationManager authenticationManager, UserService userService) {
+    public LoginRestController(JwtUtils jwtUtils, AuthenticationManager authenticationManager, UserService userService) {
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
     }
 
-    @PostMapping("/login-rest")
+    @PostMapping("/login")
     public ResponseEntity<?> generateToken(@RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) throws Exception {
 
         try {

@@ -49,7 +49,7 @@ public class OrderMvcController {
 
 
     @PostMapping("/order/confirm")
-    public String confirmOrder(@ModelAttribute("order") OrderEntity order, Principal principal) {
+    public String confirmOrder(@ModelAttribute("order") OrderEntity order, Principal principal, Model model) {
 
 
 //        OrderEntity order = orderService.getOrderById(orderId);
@@ -57,7 +57,8 @@ public class OrderMvcController {
         order.setUser(user);
         orderService.saveOrder(order);
 
-        // todo: impl. show Cart and confirm
+        model.addAttribute("order", new OrderEntity());
+
         return "index";
 
     }

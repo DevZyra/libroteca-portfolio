@@ -1,5 +1,6 @@
 package pl.devzyra.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,6 +31,7 @@ public class BookEntity {
     @ManyToMany(mappedBy = "books")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonBackReference
     private List<OrderEntity> orders = new ArrayList<>();
 
     public BookEntity() {

@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                     .antMatchers(HttpMethod.POST,"/users").permitAll()
-                    .antMatchers("/login-rest").permitAll()
+                    .antMatchers("/rest/login").permitAll()
                     .antMatchers("/activation").permitAll()
                 .anyRequest()
                 .authenticated();
