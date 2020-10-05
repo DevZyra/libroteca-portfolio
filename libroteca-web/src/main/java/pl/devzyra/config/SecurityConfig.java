@@ -19,6 +19,8 @@ import pl.devzyra.services.UserService;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String LOGIN = "/login";
+
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
     private final JwtRequestFilter jwtRequestFilter;
@@ -34,8 +36,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .formLogin()
-                     .loginPage("/login").permitAll()
-                     .loginProcessingUrl("/login")
+                     .loginPage(LOGIN).permitAll()
+                     .loginProcessingUrl(LOGIN)
                 .and()
                     .logout()
                     .logoutUrl("/logout")
@@ -46,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                     .antMatchers("/h-2console/**").hasAnyRole("ADMIN")
-                    .antMatchers("/login").permitAll()
+                    .antMatchers(LOGIN).permitAll()
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                     .antMatchers(HttpMethod.POST,"/users").permitAll()
@@ -55,7 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                 .authenticated();
 
-      http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.headers().frameOptions().disable();
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -64,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    ServletRegistrationBean h2servletRegistration() {
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
+    ServletRegistrationBean<WebServlet> h2servletRegistration() {
+      ServletRegistrationBean<WebServlet> registrationBean = new ServletRegistrationBean<>(new WebServlet());
         registrationBean.addUrlMappings("/h2-console/*");
         return registrationBean;
     }

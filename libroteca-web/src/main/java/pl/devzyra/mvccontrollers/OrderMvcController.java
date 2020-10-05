@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
+import pl.devzyra.model.entities.BookEntity;
 import pl.devzyra.model.entities.OrderEntity;
 import pl.devzyra.model.entities.UserEntity;
+import pl.devzyra.model.request.OrderRequest;
 import pl.devzyra.services.BookService;
 import pl.devzyra.services.OrderService;
 import pl.devzyra.services.UserService;
 
 import java.security.Principal;
+import java.util.Set;
 
 @Controller
 @SessionAttributes("order")
@@ -22,24 +26,25 @@ public class OrderMvcController {
     private final OrderService orderService;
 
     @ModelAttribute("order")
-    public OrderEntity getOrder() {
+    public OrderRequest getOrder() {
 
-        return new OrderEntity();
+        return new OrderRequest();
     }
 
 
     @PostMapping("/order/add/{bookId}")
-    public String addBookToOrder(@ModelAttribute("order") OrderEntity order, @PathVariable Long bookId) {
+    public String addBookToOrder(@ModelAttribute("order") OrderRequest order, @PathVariable Long bookId) {
 
         order.getBooks().add(bookService.findByBookId(bookId));
 
+        
         return "index";
 
     }
 
 
     @GetMapping("/order")
-    public String showOrder(@ModelAttribute("order") OrderEntity order, Model model) {
+    public String showOrder(@ModelAttribute("order") OrderRequest order, Model model) {
 
         model.addAttribute("orderlist", order.getBooks());
         model.addAttribute("order", order);
@@ -49,15 +54,18 @@ public class OrderMvcController {
 
 
     @PostMapping("/order/confirm")
-    public String confirmOrder(@ModelAttribute("order") OrderEntity order, Principal principal, Model model) {
+    public String confirmOrder(@ModelAttribute("order") OrderRequest orderRequest, Principal principal, Model model, SessionStatus status) {
+        Set<BookEntity> booksRequest = orderRequest.getBooks();
 
-
-//        OrderEntity order = orderService.getOrderById(orderId);
+        OrderEntity order = new OrderEntity();
         UserEntity user = userService.getUserByEmail(principal.getName());
+        order.setBooks(booksRequest);
         order.setUser(user);
         orderService.saveOrder(order);
 
-        model.addAttribute("order", new OrderEntity());
+        status.setComplete();
+
+        model.addAttribute("order", new OrderRequest());
 
         return "index";
 

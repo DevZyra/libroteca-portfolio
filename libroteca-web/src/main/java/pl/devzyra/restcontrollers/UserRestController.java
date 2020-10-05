@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.request.UserDetailsRequestModel;
 import pl.devzyra.model.response.UserRest;
@@ -30,7 +31,7 @@ public class UserRestController {
 
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails, BindingResult result) {
+    public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails, BindingResult result) throws UserServiceException {
 
         if (result.hasErrors()) {
             throw new IllegalStateException(INCORRECT_FIELDS.getErrorMessage());
@@ -63,7 +64,7 @@ public class UserRestController {
     }
 
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<UserRest> getSpecificUser(@PathVariable String userId) {
+    public ResponseEntity<UserRest> getSpecificUser(@PathVariable String userId) throws UserServiceException {
 
         UserDto userDto = userService.getUserByUserId(userId);
 
@@ -74,7 +75,7 @@ public class UserRestController {
 
     @PutMapping(path = "/{userId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String userId) {
+    public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String userId) throws UserServiceException {
 
 
         UserDto userDto = modelMapper.map(userDetails, UserDto.class);
@@ -87,7 +88,7 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String userId) {
+    public ResponseEntity<Void> deleteUser(@PathVariable String userId) throws UserServiceException {
 
         userService.deleteUser(userId);
 

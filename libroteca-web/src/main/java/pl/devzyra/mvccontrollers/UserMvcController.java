@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.request.AddressRequestModel;
@@ -23,9 +24,9 @@ import java.util.List;
 @Controller
 public class UserMvcController {
 
-    private final String VIEW_USER_FORM = "signupform";
-    private final String SIGNUP_CONFIRM = "signupconfirm";
-    private final String LOGIN_PAGE = "login";
+    private static final String USERFORM = "signupform";
+    private static final String CONFIRM = "signupconfirm";
+    private static final String LOGIN = "login";
 
     private final UserService userService;
     private final ModelMapper modelMapper;
@@ -40,22 +41,22 @@ public class UserMvcController {
     public String initUserCreationForm(Model model) {
         model.addAttribute("user", new UserDetailsRequestModel());
 
-        return VIEW_USER_FORM;
+        return USERFORM;
     }
 
     @GetMapping("/login")
     public String logUser() {
 
 
-        return LOGIN_PAGE;
+        return LOGIN;
     }
 
 
     @PostMapping("/users")
-    public String processUserCreation(@Valid @ModelAttribute("user") UserDetailsRequestModel user, BindingResult bindingResult) {
+    public String processUserCreation(@Valid @ModelAttribute("user") UserDetailsRequestModel user, BindingResult bindingResult) throws UserServiceException {
 
         if (bindingResult.hasErrors()) {
-            return VIEW_USER_FORM;
+            return USERFORM;
         }
 
         List<AddressRequestModel> addresses = user.getAddresses();
@@ -73,6 +74,6 @@ public class UserMvcController {
         mav.addObject("user", user);
 
 
-        return SIGNUP_CONFIRM;
+        return CONFIRM;
     }
 }

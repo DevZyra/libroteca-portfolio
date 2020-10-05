@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1836044288747480188L;
@@ -25,6 +26,5 @@ public class UserDto implements Serializable {
 
     private List<AddressDto> addresses = new ArrayList<>();
 
-    public UserDto() {
-    }
+
 }

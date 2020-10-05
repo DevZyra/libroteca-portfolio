@@ -8,8 +8,8 @@ import java.util.Random;
 @Component
 public class Utils {
 
-    private final Random RANDOM = new SecureRandom();
-    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private final Random random = new SecureRandom();
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 
     public String generateUserId(int length) {
@@ -28,7 +28,7 @@ public class Utils {
         StringBuilder returnVal = new StringBuilder(length);
 
         for (int i = 0; i < length; i++) {
-            returnVal.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+            returnVal.append(ALPHABET.charAt(random.nextInt(ALPHABET.length())));
         }
         return new String(returnVal);
     }

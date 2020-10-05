@@ -1,9 +1,11 @@
 package pl.devzyra.bootstrap;
 
+import lombok.SneakyThrows;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.model.entities.UserEntity;
 import pl.devzyra.model.request.AuthorRequestModel;
 import pl.devzyra.model.request.BookRequestModel;
@@ -21,6 +23,7 @@ import static pl.devzyra.model.entities.UserRole.ADMIN;
 public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
+    private static final String ADMIN_STR = "admin";
 
     private UserRepository userRepository;
     private BookRepository bookRepository;
@@ -35,19 +38,21 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
     }
 
 
+    @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         if (alreadySetup)
             return;
 
+
         UserEntity admin = new UserEntity();
-        admin.setFirstName("admin");
-        admin.setLastName("admin");
-        admin.setUserId("admin");
-        admin.setEmail("admin");
+        admin.setFirstName(ADMIN_STR);
+        admin.setLastName(ADMIN_STR);
+        admin.setUserId(ADMIN_STR);
+        admin.setEmail(ADMIN_STR);
         admin.setEmailVerificationStatus(true);
-        admin.setEncryptedPassword(passwordEncoder.encode("admin"));
+        admin.setEncryptedPassword(passwordEncoder.encode(ADMIN_STR));
         admin.setAddresses(new ArrayList<>());
         admin.setRole(ADMIN);
 
@@ -64,22 +69,25 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
 
     }
 
-    private void loadDataifEmpty() {
+    private void loadDataifEmpty() throws BookServiceException {
+
+        String isbn = "978-2-12-345680-3";
+
         AuthorRequestModel author = new AuthorRequestModel("Author01", "Author01");
-        BookRequestModel bookReq = BookRequestModel.builder().isbn("978-2-12-345680-3").title("Book01").authors(Set.of(author)).build();
+        BookRequestModel bookReq = BookRequestModel.builder().isbn(isbn).title("Book01").authors(Set.of(author)).build();
 
         AuthorRequestModel author02 = new AuthorRequestModel("Author02", "Author02");
-        BookRequestModel bookReq02 = BookRequestModel.builder().isbn("978-2-12-345680-3").title("Book02").authors(Set.of(author02)).build();
+        BookRequestModel bookReq02 = BookRequestModel.builder().isbn(isbn).title("Book02").authors(Set.of(author02)).build();
 
         AuthorRequestModel author03 = new AuthorRequestModel("Author03", "Author03");
-        BookRequestModel bookReq03 = BookRequestModel.builder().isbn("978-2-12-345680-3").title("Book03").authors(Set.of(author03)).build();
+        BookRequestModel bookReq03 = BookRequestModel.builder().isbn(isbn).title("Book03").authors(Set.of(author03)).build();
 
         AuthorRequestModel author04 = new AuthorRequestModel("First", "Author");
         AuthorRequestModel author05 = new AuthorRequestModel("Second", "Author");
         Set<AuthorRequestModel> authorsSet = new HashSet<>();
         authorsSet.add(author04);
         authorsSet.add(author05);
-        BookRequestModel bookRequest04 = BookRequestModel.builder().isbn("978-2-12-345680-3").title("BookTwoAuthors").authors(authorsSet).build();
+        BookRequestModel bookRequest04 = BookRequestModel.builder().isbn(isbn).title("BookTwoAuthors").authors(authorsSet).build();
 
         if (bookRepository.findAll().isEmpty()) {
             bookService.createBook(bookReq);

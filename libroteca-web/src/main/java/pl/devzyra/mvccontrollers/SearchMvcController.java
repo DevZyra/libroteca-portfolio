@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pl.devzyra.model.response.BookRest;
 import pl.devzyra.services.BookService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequestMapping
@@ -24,20 +24,15 @@ public class SearchMvcController {
     }
 
 
-    @GetMapping
-    @RequestMapping("/searchMvc")
-    String search(@RequestParam(name = "searchBy") String searchBy, @RequestParam String name, Model model) {
+    @GetMapping(path = "/searchMvc")
+    public String search(@RequestParam(name = "searchBy") String searchBy, @RequestParam String name, Model model) {
 
-        List<BookRest> books = new ArrayList<>();
+        Set<BookRest> books = new HashSet<>();
 
-        switch (searchBy) {
-            case "title":
-                books = bookService.findBooksByTitle(name);
-                break;
-            case "author":
-                books = bookService.findBooksByAuthor(name);
-                break;
-
+        if (searchBy.equals("title")) {
+            books.addAll(bookService.findBooksByTitle(name));
+        } else {
+            books.addAll(bookService.findBooksByAuthor(name));
         }
 
         if (books.isEmpty()) {
@@ -46,7 +41,6 @@ public class SearchMvcController {
 
             model.addAttribute("books", books);
         }
-
 
         return "index";
     }

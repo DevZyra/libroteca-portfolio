@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,8 +15,9 @@ import java.util.Set;
 
 @Entity(name = "books")
 @Data
-public class BookEntity {
+public class BookEntity implements Serializable {
 
+    private static final long serialVersionUID = -1440270069253509721L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

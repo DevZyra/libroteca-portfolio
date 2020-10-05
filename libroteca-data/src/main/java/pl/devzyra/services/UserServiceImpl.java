@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.devzyra.exceptions.UserServiceException;
@@ -40,13 +39,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto createUser(UserDto user) {
+    public UserDto createUser(UserDto user) throws UserServiceException {
 
         if (userRepository.findByEmail(user.getEmail()) != null) {
             throw new UserServiceException(RECORD_ALREADY_EXISTS.getErrorMessage());
         }
 
-        if (user.getAddresses().size() != 0) {
+        if (!user.getAddresses().isEmpty()) {
 
             for (int i = 0; i < user.getAddresses().size(); i++) {
                 AddressDto address = user.getAddresses().get(i);
@@ -90,7 +89,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserByUserId(String userId) {
+    public UserDto getUserByUserId(String userId) throws UserServiceException {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) {
             throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
@@ -100,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDto updateUser(String userId, UserDto userDto) {
+    public UserDto updateUser(String userId, UserDto userDto) throws UserServiceException {
 
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
@@ -119,7 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String userId) {
+    public void deleteUser(String userId) throws UserServiceException {
 
         UserEntity userEntity = userRepository.findByUserId(userId);
 
@@ -132,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
 
         return userRepository.findByEmail(username);
     }

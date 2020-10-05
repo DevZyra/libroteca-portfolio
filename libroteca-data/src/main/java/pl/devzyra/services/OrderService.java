@@ -1,6 +1,7 @@
 package pl.devzyra.services;
 
 
+import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.model.entities.OrderEntity;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface OrderService {
 
     OrderEntity saveOrder(OrderEntity order);
 
-    OrderEntity getOrderById(Long id);
+    OrderEntity getOrderById(Long id) throws BookServiceException;
 
     List<OrderEntity> getAllOrders();
 }

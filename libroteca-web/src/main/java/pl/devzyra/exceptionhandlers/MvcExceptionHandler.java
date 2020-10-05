@@ -53,8 +53,6 @@ public class MvcExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView handleInternalException(Exception e, HttpServletRequest request) {
         log.error("", e);
-
-
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());
 
 

@@ -24,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderEntity getOrderById(Long id) {
+    public OrderEntity getOrderById(Long id) throws BookServiceException {
         Optional<OrderEntity> orderEntity = orderRepository.findById(id);
         if (orderEntity.isPresent()) {
             return orderEntity.get();

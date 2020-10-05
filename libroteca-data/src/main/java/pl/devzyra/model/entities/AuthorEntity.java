@@ -7,13 +7,15 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "authors")
 @Data
-public class AuthorEntity {
+public class AuthorEntity implements Serializable {
 
+    private static final long serialVersionUID = 5138986964135797299L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore

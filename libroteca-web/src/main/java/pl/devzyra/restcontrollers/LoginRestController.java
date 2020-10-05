@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.filters.JwtUtils;
 import pl.devzyra.model.request.UserLoginRequest;
 import pl.devzyra.services.UserService;
 
 import javax.servlet.http.HttpServletResponse;
+
+import static pl.devzyra.exceptions.ErrorMessages.AUTHENTICATION_FAILED;
 
 
 @RestController
@@ -32,14 +35,14 @@ public class LoginRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> generateToken(@RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) throws Exception {
+    public ResponseEntity<String> generateToken(@RequestBody UserLoginRequest userLoginRequest, HttpServletResponse response) throws UserServiceException {
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userLoginRequest.getUsername(), userLoginRequest.getPassword()));
 
 
         } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            throw new UserServiceException(AUTHENTICATION_FAILED.getErrorMessage());
         }
 
         final UserDetails userDetails = userService.loadUserByUsername(userLoginRequest.getUsername());

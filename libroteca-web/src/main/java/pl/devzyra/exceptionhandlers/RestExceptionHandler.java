@@ -31,7 +31,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<?> handleOtherExceptions(Exception e, HttpServletRequest request) {
+    protected ResponseEntity<ErrorDetails> handleOtherExceptions(Exception e, HttpServletRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), e.getMessage(), request.getRequestURI());
 
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);

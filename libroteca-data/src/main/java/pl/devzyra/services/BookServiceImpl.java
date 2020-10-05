@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookRest createBook(BookRequestModel bookRequest) {
+    public BookRest createBook(BookRequestModel bookRequest) throws BookServiceException {
 
         if (bookRepository.findByTitle(bookRequest.getTitle()) != null) {
             throw new BookServiceException(RECORD_ALREADY_EXISTS.getErrorMessage());
@@ -54,14 +54,12 @@ public class BookServiceImpl implements BookService {
         bookEntity.getAuthors().addAll(authorEntities);
         bookRepository.save(bookEntity);
 
-        BookRest returnVal = modelMapper.map(bookEntity, BookRest.class);
 
-
-        return returnVal;
+        return modelMapper.map(bookEntity, BookRest.class);
     }
 
     @Override
-    public BookRest getBook(Long bookId) {
+    public BookRest getBook(Long bookId) throws BookServiceException {
 
         Optional<BookEntity> book = bookRepository.findById(bookId);
         if (book.isEmpty()) {
@@ -73,7 +71,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(Long bookId) {
+    public void deleteBook(Long bookId) throws UserServiceException {
         Optional<BookEntity> bookEntity = bookRepository.findById(bookId);
 
         if (bookEntity.isEmpty()) {
@@ -95,7 +93,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity findByBookId(Long bookId) {
-        return bookRepository.findById(bookId).get();
+
+        Optional<BookEntity> returnVal = bookRepository.findById(bookId);
+        return returnVal.orElse(null);
     }
 
     @Override

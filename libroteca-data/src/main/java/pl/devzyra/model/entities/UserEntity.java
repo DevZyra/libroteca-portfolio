@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,8 +19,10 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserEntity implements UserDetails {
+@NoArgsConstructor
+public class UserEntity implements UserDetails, Serializable {
 
+    private static final long serialVersionUID = -4167446301923146569L;
     @Id
     @GeneratedValue
     private Long id;            // Sensitive data , database id
@@ -39,14 +43,10 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     @JsonBackReference
-    public List<OrderEntity> order = new ArrayList<>();
+    private List<OrderEntity> order = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
-
-
-    public UserEntity() {
-    }
 
 
     @PrePersist

@@ -1,12 +1,16 @@
 package pl.devzyra.model.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class AddressDto implements Serializable {
 
     private static final long serialVersionUID = -3432666704228581164L;
@@ -18,9 +22,6 @@ public class AddressDto implements Serializable {
     private String streetName;
     private String zipCode;
 
-
     private UserDto userDetails;
 
-    public AddressDto() {
-    }
 }
