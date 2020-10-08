@@ -20,6 +20,10 @@ public class Utils {
         return generateRandomString(length);
     }
 
+    public String generateOrderId(int length) {
+        return generateRandomString(length);
+    }
+
     public String generateVerificationToken(int length) {
         return generateRandomString(length);
     }

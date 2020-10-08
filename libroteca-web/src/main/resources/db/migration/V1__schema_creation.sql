@@ -15,3 +15,4 @@ alter table order_book_user add constraint FKtkus3oa7xpvlkgcbbc7g4fnav foreign k
 alter table order_book_user add constraint FK1iq83rt3iradhm36bwvhjbnma foreign key (books_id) references books;
 alter table users add constraint FKc2ohfve6xedbgraltt572hcfx foreign key (email_verification_token_id) references verification_tokens;
 alter table verification_tokens add constraint FK54y8mqsnq1rtyf581sfmrbp4f foreign key (user_id) references users;
+alter table orders add column order_id varchar(255);

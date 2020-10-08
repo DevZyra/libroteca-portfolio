@@ -17,6 +17,7 @@ public class OrderEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String orderId;
 
     @ManyToMany
     @JoinTable(name = "mtm_order2book", joinColumns = @JoinColumn(name = "orders_id"),

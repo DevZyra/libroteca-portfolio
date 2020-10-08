@@ -10,7 +10,7 @@ public interface OrderService {
 
     OrderEntity saveOrder(OrderEntity order);
 
-    OrderEntity getOrderById(Long id) throws BookServiceException;
+    OrderEntity getOrderById(String id) throws BookServiceException;
 
     List<OrderEntity> getAllOrders();
 }
