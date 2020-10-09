@@ -12,7 +12,7 @@ public interface BookService {
 
     BookRest createBook(BookRequestModel bookRequest) throws BookServiceException;
 
-    BookRest getBook(Long bookId) throws BookServiceException;
+    BookRest getById(Long bookId) throws BookServiceException;
 
     void deleteBook(Long bookId) throws UserServiceException;
 

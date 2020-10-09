@@ -133,6 +133,7 @@ class UserServiceImplTest {
 
         assertEquals("Anny", user.getFirstName());
         assertNotNull(user);
+        verify(userRepository,times(1)).findByEmail(userEntity.getEmail());
 
     }
 
@@ -147,7 +148,7 @@ class UserServiceImplTest {
             userService.getUserByUserId(anyString());
         });
         assertNull(user);
-        verify(userRepository,times(1)).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
 
     }
 
@@ -157,10 +158,11 @@ class UserServiceImplTest {
         when(modelMapper.map(userEntity, UserDto.class)).thenReturn(userDto);
 
         UserDto user = userService.getUserByUserId(anyString());
+
         assertNotNull(user);
         assertEquals("Anny", user.getFirstName());
         assertEquals(userId, user.getUserId());
-        verify(userRepository,times(1)).findByUserId(anyString());
+        verify(userRepository, times(1)).findByUserId(anyString());
     }
 
     @Test
@@ -190,8 +192,8 @@ class UserServiceImplTest {
         assertEquals(savedDto.getFirstName(), entityUpdated.getFirstName());
         assertNotNull(entityUpdated);
         assertNotNull(userDto);
-        verify(userRepository,times(1)).findByUserId(anyString());
-        verify(userRepository,times(1)).save(any(UserEntity.class));
+        verify(userRepository, times(1)).findByUserId(anyString());
+        verify(userRepository, times(1)).save(any(UserEntity.class));
 
 
     }
@@ -205,9 +207,9 @@ class UserServiceImplTest {
 
         userService.deleteUser(anyString());
 
-        verify(userRepository, times(1)).delete(any(UserEntity.class));
 
         assertNotNull(userDto);
+        verify(userRepository, times(1)).delete(any(UserEntity.class));
     }
 
     @Test
@@ -230,9 +232,10 @@ class UserServiceImplTest {
         UserDetails user = userService.loadUserByUsername(anyString());
 
         assertNotNull(user);
-        verify(userRepository,times(1)).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
 
     }
+
     @Test
     void loadUserByUsernameThrows() {
         when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
@@ -240,7 +243,7 @@ class UserServiceImplTest {
         UserDetails user = userService.loadUserByUsername(anyString());
 
         assertNotNull(user);
-        verify(userRepository,times(1)).findByEmail(anyString());
+        verify(userRepository, times(1)).findByEmail(anyString());
 
     }
 }

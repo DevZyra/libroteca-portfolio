@@ -59,7 +59,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookRest getBook(Long bookId) throws BookServiceException {
+    public BookRest getById(Long bookId) throws BookServiceException {
 
         Optional<BookEntity> book = bookRepository.findById(bookId);
         if (book.isEmpty()) {

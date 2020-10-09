@@ -55,7 +55,7 @@ public class BookRestController {
     @GetMapping("/{bookId}")
     public ResponseEntity<BookRest> getBookById(@PathVariable Long bookId) throws BookServiceException {
 
-        BookRest book = bookService.getBook(bookId);
+        BookRest book = bookService.getById(bookId);
 
         return ResponseEntity.ok(book);
     }
