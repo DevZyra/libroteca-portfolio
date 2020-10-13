@@ -1,6 +1,7 @@
 package pl.devzyra.services;
 
 
+import lombok.SneakyThrows;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -84,8 +85,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserEntity getUserByEmail(String email) throws UserServiceException {
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+        return user;
+
     }
 
     @Override
@@ -130,9 +136,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        return userRepository.findByEmail(username);
+        UserEntity user = userRepository.findByEmail(username);
+        if (user == null) {
+            throw new UserServiceException(NO_RECORD_FOUND.getErrorMessage());
+        }
+        return user;
     }
 }

@@ -15,7 +15,7 @@ import java.util.Set;
 @RequestMapping
 public class SearchMvcController {
 
-
+    private static final String INDEX = "index";
     private final BookService bookService;
 
 
@@ -42,7 +42,7 @@ public class SearchMvcController {
             model.addAttribute("books", books);
         }
 
-        return "index";
+        return INDEX;
     }
 
 

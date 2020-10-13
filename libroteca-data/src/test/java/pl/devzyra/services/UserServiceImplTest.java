@@ -126,14 +126,14 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUserByEmailSuccessful() {
-        when(userService.getUserByEmail(userEntity.getEmail())).thenReturn(userEntity);
+    void getUserByEmailSuccessful() throws UserServiceException {
+        when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
 
-        UserEntity user = userRepository.findByEmail(userEntity.getEmail());
+        UserEntity user = userService.getUserByEmail(anyString());
 
         assertEquals("Anny", user.getFirstName());
         assertNotNull(user);
-        verify(userRepository,times(1)).findByEmail(userEntity.getEmail());
+        verify(userRepository, times(1)).findByEmail(anyString());
 
     }
 
@@ -224,26 +224,37 @@ class UserServiceImplTest {
         assertNull(user);
 
     }
-
+    
     @Test
-    void loadUserByUsername() {
+    void getUserByEmail() {
         when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
 
         UserDetails user = userService.loadUserByUsername(anyString());
 
         assertNotNull(user);
+        assertEquals(user.getUsername(), userEntity.getEmail());
         verify(userRepository, times(1)).findByEmail(anyString());
-
     }
 
     @Test
-    void loadUserByUsernameThrows() {
-        when(userRepository.findByEmail(anyString())).thenReturn(userEntity);
+    void getUserByEmailThrowsException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(null);
 
-        UserDetails user = userService.loadUserByUsername(anyString());
+        assertThrows(UserServiceException.class, () -> {
+
+            userService.loadUserByUsername(anyString());
+        });
+
+        verify(userRepository, times(1)).findByEmail(anyString());
+    }
+
+    @Test
+    void getUserByUserId() throws UserServiceException {
+        when(userRepository.findByUserId(userId)).thenReturn(userEntity);
+        when(modelMapper.map(userEntity, UserDto.class)).thenReturn(userDto);
+        UserDto user = userService.getUserByUserId(userId);
 
         assertNotNull(user);
-        verify(userRepository, times(1)).findByEmail(anyString());
-
+        verify(userRepository, times(1)).findByUserId(userId);
     }
 }

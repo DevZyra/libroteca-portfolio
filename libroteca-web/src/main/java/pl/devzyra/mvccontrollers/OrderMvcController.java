@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.entities.BookEntity;
 import pl.devzyra.model.entities.OrderEntity;
 import pl.devzyra.model.entities.UserEntity;
@@ -54,7 +55,7 @@ public class OrderMvcController {
 
 
     @PostMapping("/order/confirm")
-    public String confirmOrder(@ModelAttribute("order") OrderRequest orderRequest, Principal principal, Model model, SessionStatus status) {
+    public String confirmOrder(@ModelAttribute("order") OrderRequest orderRequest, Principal principal, Model model, SessionStatus status) throws UserServiceException {
         Set<BookEntity> booksRequest = orderRequest.getBooks();
 
         OrderEntity order = new OrderEntity();
