@@ -3,6 +3,7 @@ package pl.devzyra.restcontrollers;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.devzyra.exceptions.UserServiceException;
@@ -46,7 +47,7 @@ public class UserRestController {
         return ResponseEntity.ok(returnVal);
 
     }
-
+    @Secured("ROLE_ADMIN")
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<UserRest> getAllUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                       @RequestParam(value = "limit", defaultValue = "25") int limit) {
@@ -62,7 +63,7 @@ public class UserRestController {
 
         return returnValue;
     }
-
+    @Secured("ROLE_ADMIN")
     @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> getSpecificUser(@PathVariable String userId) throws UserServiceException {
 
@@ -72,7 +73,7 @@ public class UserRestController {
 
         return ResponseEntity.ok(returnVal);
     }
-
+    @Secured("ROLE_ADMIN")
     @PutMapping(path = "/{userId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String userId) throws UserServiceException {
@@ -86,7 +87,7 @@ public class UserRestController {
 
         return ResponseEntity.ok(returnValue);
     }
-
+    @Secured("ROLE_ADMIN")
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable String userId) throws UserServiceException {
 

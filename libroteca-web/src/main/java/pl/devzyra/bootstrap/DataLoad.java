@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.model.entities.UserEntity;
+import pl.devzyra.model.entities.UserRole;
 import pl.devzyra.model.request.AuthorRequestModel;
 import pl.devzyra.model.request.BookRequestModel;
 import pl.devzyra.repositories.BookRepository;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static pl.devzyra.model.entities.UserRole.*;
 import static pl.devzyra.model.entities.UserRole.ADMIN;
 
 @Component
@@ -24,6 +26,7 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
 
     boolean alreadySetup = false;
     private static final String ADMIN_STR = "admin";
+    private static final String USER_STR = "user";
 
     private UserRepository userRepository;
     private BookRepository bookRepository;
@@ -61,6 +64,18 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
         // @PrePersist role setup override
         admin.setRole(ADMIN);
         userRepository.save(admin);
+
+        UserEntity user = new UserEntity();
+        user.setFirstName(USER_STR);
+        user.setLastName(USER_STR);
+        user.setUserId(USER_STR);
+        user.setEmail(USER_STR);
+        user.setEmailVerificationStatus(true);
+        user.setEncryptedPassword(passwordEncoder.encode(USER_STR));
+        user.setAddresses(new ArrayList<>());
+        user.setRole(USER);
+
+        userRepository.save(user);
 
         loadDataifEmpty();
 
