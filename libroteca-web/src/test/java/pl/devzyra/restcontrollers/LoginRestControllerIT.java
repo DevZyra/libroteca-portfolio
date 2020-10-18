@@ -4,38 +4,35 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.client.RestTemplate;
+import pl.devzyra.filters.JwtUtils;
+import pl.devzyra.model.entities.UserEntity;
 import pl.devzyra.model.request.UserLoginRequest;
+import pl.devzyra.repositories.UserRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.HttpMethod.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebClient(registerRestTemplate = true)
 class LoginRestControllerIT {
 
     @LocalServerPort
     int port;
 
     @Autowired
-    TestRestTemplate restTemplate;
+    RestTemplate restTemplate;
+
+    @Autowired
+    JwtUtils jwtUtils;
+
+    @Autowired
+    UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -43,7 +40,14 @@ class LoginRestControllerIT {
 
     @Test
     public void existentUserCanGetTokenAndAuthentication() throws Exception {
+        String login_url = "http://localhost:8080/rest/login";
 
-        // todo: implement JWT integration test??
+        UserLoginRequest userLoginRequest = new UserLoginRequest("admin", "admin");
+
+        String json = restTemplate.postForObject(login_url, userLoginRequest, String.class);
+        UserEntity user = userRepository.findByEmail(userLoginRequest.getUsername());
+
+        assertTrue(jwtUtils.validateToken(json, user));
+        assertNotNull(json);
     }
 }

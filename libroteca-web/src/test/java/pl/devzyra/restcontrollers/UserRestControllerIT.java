@@ -59,7 +59,7 @@ class UserRestControllerIT {
                         .with(user("user").roles("USER"))
                         .with(csrf())
         )
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -77,10 +77,10 @@ class UserRestControllerIT {
     void getUsers_NonAuthorised_ThrowsAccessDeniedException() throws Exception {
         mockMvc.perform(
                 get("/rest/users")
-                        .with(user("user").roles("user"))
+                        .with(user("user").roles("USER"))
                         .with(csrf())
         )
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isForbidden());
     }
 
 }

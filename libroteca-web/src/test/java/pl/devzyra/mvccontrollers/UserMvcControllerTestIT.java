@@ -1,5 +1,6 @@
 package pl.devzyra.mvccontrollers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import pl.devzyra.model.request.UserLoginRequest;
 import pl.devzyra.services.UserServiceImpl;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,8 +32,10 @@ class UserMvcControllerTestIT {
     @Autowired
     ModelMapper modelMapper;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     private static final String USERFORM = "signupform";
-    private static final String CONFIRM = "signupconfirm";
     private static final String LOGIN = "login";
 
     @BeforeEach
@@ -62,7 +66,6 @@ class UserMvcControllerTestIT {
                 .andExpect(status().isOk())
                 .andExpect(view().name(USERFORM));
     }
-
 
 
 }

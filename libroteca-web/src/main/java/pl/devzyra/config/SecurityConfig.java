@@ -51,10 +51,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/h-2console/**").hasAnyRole("ADMIN")
                     .antMatchers(LOGIN).permitAll()
+                    .antMatchers("/rest/login").permitAll()
+                    .antMatchers("/rest/books/**").permitAll()
+                    .antMatchers("/rest/**").hasRole("ADMIN")
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
                     .antMatchers(HttpMethod.POST,"/users").permitAll()
-                    .antMatchers("/rest/login").permitAll()
+
                     .antMatchers("/activation").permitAll()
                 .anyRequest()
                 .authenticated();
