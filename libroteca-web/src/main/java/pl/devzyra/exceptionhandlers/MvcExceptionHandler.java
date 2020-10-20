@@ -12,12 +12,16 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.ErrorDetails;
 import pl.devzyra.exceptions.UserServiceException;
+import pl.devzyra.mvccontrollers.IndexMvcController;
+import pl.devzyra.mvccontrollers.OrderMvcController;
+import pl.devzyra.mvccontrollers.SearchMvcController;
+import pl.devzyra.mvccontrollers.UserMvcController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 
-@ControllerAdvice
+@ControllerAdvice(assignableTypes = {UserMvcController.class, OrderMvcController.class, SearchMvcController.class, IndexMvcController.class})
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Slf4j
 public class MvcExceptionHandler {

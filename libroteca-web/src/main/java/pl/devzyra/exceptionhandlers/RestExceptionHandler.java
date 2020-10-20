@@ -4,8 +4,11 @@ package pl.devzyra.exceptionhandlers;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.ErrorDetails;
@@ -17,7 +20,7 @@ import pl.devzyra.restcontrollers.UserRestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-@RestControllerAdvice(assignableTypes = {BookRestController.class, UserRestController.class, SearchRestController.class})
+@RestControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class RestExceptionHandler {
 
@@ -37,5 +40,9 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
+    @ResponseBody
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public String handleHttpMediaTypeNotAcceptableException() {
+        return "acceptable MIME type:" + MediaType.APPLICATION_JSON_VALUE;
+    }
 }

@@ -22,7 +22,7 @@ public class SearchRestController {
         this.bookService = bookService;
     }
 
-    @GetMapping(params = "title",produces = {MediaType.APPLICATION_JSON_VALUE,MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(params = "title",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookRest>> searchTitle(@RequestParam(required = false, name = "title") String title) throws BookServiceException {
 
 
@@ -34,7 +34,7 @@ public class SearchRestController {
         return ResponseEntity.ok(returnVal);
     }
 
-    @GetMapping(params = "author",produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(params = "author",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookRest>> searchAuthor(@RequestParam(required = false, name = "author") String author) {
 
         List<BookRest> booksByAuthor = bookService.findBooksByAuthor(author);

@@ -30,8 +30,8 @@ public class UserRestController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails, BindingResult result) throws UserServiceException {
 
         if (result.hasErrors()) {
@@ -48,7 +48,7 @@ public class UserRestController {
 
     }
     @Secured("ROLE_ADMIN")
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<UserRest> getAllUsers(@RequestParam(value = "page", defaultValue = "0") int page,
                                       @RequestParam(value = "limit", defaultValue = "25") int limit) {
 
@@ -64,7 +64,7 @@ public class UserRestController {
         return returnValue;
     }
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/{userId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserRest> getSpecificUser(@PathVariable String userId) throws UserServiceException {
 
         UserDto userDto = userService.getUserByUserId(userId);
@@ -74,8 +74,8 @@ public class UserRestController {
         return ResponseEntity.ok(returnVal);
     }
     @Secured("ROLE_ADMIN")
-    @PutMapping(path = "/{userId}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PutMapping(path = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserRest> updateUser(@RequestBody UserDetailsRequestModel userDetails, @PathVariable String userId) throws UserServiceException {
 
 

@@ -16,5 +16,10 @@
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="jcenter-snapshots" />
+      <option name="name" value="jcenter" />
+      <option name="url" value="http://oss.jfrog.org/artifactory/oss-snapshot-local/" />
+    </remote-repository>
   </component>
 </project>

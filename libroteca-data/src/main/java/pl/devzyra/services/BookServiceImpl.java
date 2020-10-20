@@ -51,7 +51,7 @@ public class BookServiceImpl implements BookService {
         Set<AuthorEntity> authorEntities = bookRequest.getAuthors().stream().map(x -> modelMapper.map(x, AuthorEntity.class)).collect(Collectors.toSet());
         authorRepository.saveAll(authorEntities);
 
-        bookEntity.getAuthors().addAll(authorEntities);
+        bookEntity.setAuthors(authorEntities);
         bookRepository.save(bookEntity);
 
 
