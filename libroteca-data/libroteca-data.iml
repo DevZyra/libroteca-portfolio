@@ -167,5 +167,30 @@
     <orderEntry type="library" name="Maven: io.micrometer:micrometer-core:1.5.4" level="project" />
     <orderEntry type="library" name="Maven: org.hdrhistogram:HdrHistogram:2.1.12" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.latencyutils:LatencyUtils:2.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-artemis:2.3.3.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.jms:jakarta.jms-api:2.0.3" level="project" />
+    <orderEntry type="library" name="Maven: jakarta.json:jakarta.json-api:1.1.6" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-jms:5.2.8.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-messaging:5.2.8.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.activemq:artemis-jms-client:2.12.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.activemq:artemis-core-client:2.12.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jgroups:jgroups:3.6.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.johnzon:johnzon-core:1.2.8" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-unix-common:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-kqueue:osx-x86_64:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.51.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.activemq:artemis-commons:2.12.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.activemq:artemis-selector:2.12.0" level="project" />
   </component>
 </module>

@@ -27,6 +27,7 @@ public class OrderEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonManagedReference
     private UserEntity user;
 
 
