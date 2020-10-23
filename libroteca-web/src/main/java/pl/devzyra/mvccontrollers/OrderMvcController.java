@@ -1,6 +1,7 @@
 package pl.devzyra.mvccontrollers;
 
 import lombok.AllArgsConstructor;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import pl.devzyra.services.UserService;
 import java.security.Principal;
 import java.util.Set;
 
+import static pl.devzyra.config.JmsConfig.ORDER_QUEUE;
+
 @Controller
 @SessionAttributes("order")
 @AllArgsConstructor
@@ -25,6 +28,7 @@ public class OrderMvcController {
     private final BookService bookService;
     private final UserService userService;
     private final OrderService orderService;
+    private final JmsTemplate jmsTemplate;
 
     @ModelAttribute("order")
     public OrderRequest getOrder() {
@@ -38,7 +42,7 @@ public class OrderMvcController {
 
         order.getBooks().add(bookService.findByBookId(bookId));
 
-        
+
         return "index";
 
     }
@@ -65,6 +69,8 @@ public class OrderMvcController {
         orderService.saveOrder(order);
 
         status.setComplete();
+
+        jmsTemplate.convertAndSend(ORDER_QUEUE, order);
 
         model.addAttribute("order", new OrderRequest());
 
