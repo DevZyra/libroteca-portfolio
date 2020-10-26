@@ -45,6 +45,10 @@ public class UserEntity implements UserDetails, Serializable {
     @JsonBackReference
     private List<OrderEntity> order = new ArrayList<>();
 
+    @OneToOne
+    @JsonManagedReference
+    private RestCartEntity cart;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -89,4 +93,5 @@ public class UserEntity implements UserDetails, Serializable {
     public boolean isEnabled() {
         return true;
     }
+
 }

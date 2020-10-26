@@ -24,6 +24,7 @@ public class Utils {
         return generateRandomString(length);
     }
 
+
     public String generateVerificationToken(int length) {
         return generateRandomString(length);
     }

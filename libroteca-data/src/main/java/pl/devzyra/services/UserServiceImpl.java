@@ -13,12 +13,16 @@ import org.springframework.stereotype.Service;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
+import pl.devzyra.model.entities.RestCartEntity;
 import pl.devzyra.model.entities.UserEntity;
+import pl.devzyra.repositories.RestCartRepository;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
@@ -27,18 +31,21 @@ import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RestCartRepository restCartRepository;
     private final ModelMapper modelMapper;
     private final Utils utils;
     private final PasswordEncoder passwordEncoder;
 
 
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, Utils utils, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RestCartRepository restCartRepository, ModelMapper modelMapper, Utils utils, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.restCartRepository = restCartRepository;
         this.modelMapper = modelMapper;
         this.utils = utils;
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     @Override
     public UserDto createUser(UserDto user) throws UserServiceException {
 
@@ -62,6 +69,13 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserId(utils.generateUserId(15));
         userEntity.setEncryptedPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setEmailVerificationStatus(false);
+
+        RestCartEntity cartEntity = new RestCartEntity();
+        cartEntity.setCartId(String.valueOf(UUID.randomUUID()));
+        cartEntity.setUser(userEntity);
+
+        restCartRepository.save(cartEntity);
+        userEntity.setCart(cartEntity);
 
         UserEntity stored = userRepository.save(userEntity);
 
@@ -92,6 +106,11 @@ public class UserServiceImpl implements UserService {
         }
         return user;
 
+    }
+
+    @Override
+    public void save(UserEntity user) {
+        userRepository.save(user);
     }
 
     @Override

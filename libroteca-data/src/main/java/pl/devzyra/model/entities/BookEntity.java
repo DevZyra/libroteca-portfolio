@@ -26,7 +26,7 @@ public class BookEntity implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "author_book", joinColumns = @JoinColumn(name = "books_id"),
-    inverseJoinColumns = @JoinColumn(name = "authors_id"))
+            inverseJoinColumns = @JoinColumn(name = "authors_id"))
     @JsonManagedReference
     private Set<AuthorEntity> authors = new HashSet<>();
 
@@ -35,6 +35,7 @@ public class BookEntity implements Serializable {
     @ToString.Exclude
     @JsonBackReference
     private List<OrderEntity> orders = new ArrayList<>();
+
 
     public BookEntity() {
     }

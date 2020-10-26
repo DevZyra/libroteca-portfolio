@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(LOGIN).permitAll()
                     .antMatchers("/rest/login").permitAll()
                     .antMatchers("/rest/books/**").permitAll()
+                    .antMatchers("/rest/cart/**").permitAll()
                     .antMatchers("/rest/**").hasRole("ADMIN")
                     .antMatchers("/signup").permitAll()
                     .antMatchers("/", "index", "/css/*", "/js/*").permitAll()
@@ -74,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     ServletRegistrationBean<WebServlet> h2servletRegistration() {
-      ServletRegistrationBean<WebServlet> registrationBean = new ServletRegistrationBean<>(new WebServlet());
+        ServletRegistrationBean<WebServlet> registrationBean = new ServletRegistrationBean<>(new WebServlet());
         registrationBean.addUrlMappings("/h2-console/*");
         return registrationBean;
     }
