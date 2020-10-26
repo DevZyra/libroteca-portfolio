@@ -64,7 +64,7 @@ public class OrderRestController {
             listOfOrders.add(orderRest);
         });
 
-        Link selfLink = linkTo(OrderRestController.class).withSelfRel();
+        Link selfLink = linkTo(methodOn(OrderRestController.class).getAllOrders()).withSelfRel();
         Link firstOrder = linkTo(methodOn(OrderRestController.class).getOrderById(listOfOrders.get(0).getOrderId())).withRel("/{orderId} = first order");
         return CollectionModel.of(listOfOrders, List.of(selfLink, firstOrder));
     }

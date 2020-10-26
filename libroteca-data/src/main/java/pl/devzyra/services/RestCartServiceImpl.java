@@ -33,4 +33,9 @@ public class RestCartServiceImpl implements RestCartService {
 
         return book;
     }
+
+    @Override
+    public RestCartEntity save(RestCartEntity cart) {
+        return restCartRepository.save(cart);
+    }
 }

@@ -10,5 +10,4 @@ public interface RestCartRepository extends CrudRepository<RestCartEntity, Long>
 
     RestCartEntity findByUser(UserEntity user);
 
-
 }

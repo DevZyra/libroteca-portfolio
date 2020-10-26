@@ -13,7 +13,9 @@ import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.entities.AddressEntity;
+import pl.devzyra.model.entities.RestCartEntity;
 import pl.devzyra.model.entities.UserEntity;
+import pl.devzyra.repositories.RestCartRepository;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
 
@@ -31,6 +33,8 @@ class UserServiceImplTest {
     @InjectMocks
     UserServiceImpl userService;
 
+    @Mock
+    RestCartRepository restCartRepository;
     @Mock
     UserRepository userRepository;
     @Mock
@@ -82,6 +86,9 @@ class UserServiceImplTest {
 
         when(modelMapper.map(userDto, UserEntity.class)).thenReturn(userEntity);
         when(modelMapper.map(userEntity, UserDto.class)).thenReturn(userDto);
+
+        when(restCartRepository.save(any(RestCartEntity.class))).thenReturn(new RestCartEntity());
+
         UserDto storedUserDetails = userService.createUser(userDto);
         storedUserDetails.setUserId(utils.generateUserId(anyInt()));
 

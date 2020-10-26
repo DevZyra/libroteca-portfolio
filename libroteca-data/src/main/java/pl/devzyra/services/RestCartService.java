@@ -10,5 +10,7 @@ public interface RestCartService {
 
     BookEntity addToCart(UserEntity user, BookEntity book);
 
+    RestCartEntity save(RestCartEntity cart);
+
 
 }

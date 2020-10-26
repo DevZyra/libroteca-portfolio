@@ -17,7 +17,6 @@ import pl.devzyra.services.OrderService;
 import pl.devzyra.services.RestCartService;
 import pl.devzyra.services.UserService;
 
-import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +50,6 @@ public class CartRestController {
         return ResponseEntity.of(Optional.of(cart));
     }
 
-    @Transactional
     @PostMapping("/{bookId}")
     public ResponseEntity<BookEntity> addToCart(@PathVariable Long bookId, Principal principal) throws UserServiceException {
         UserEntity user = userService.getUserByEmail(principal.getName());
@@ -80,5 +78,18 @@ public class CartRestController {
         orderRest.setUserRest(modelMapper.map(user, UserRest.class));
 
         return new ResponseEntity<>(orderRest, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{bookId}")
+    public void removeFromCart(@PathVariable Long bookId, Principal principal) throws UserServiceException {
+        UserEntity user = userService.getUserByEmail(principal.getName());
+        BookEntity book = bookService.findByBookId(bookId);
+
+        RestCartEntity cart = user.getCart();
+
+        cart.getBooks().remove(book);
+
+        restCartService.save(cart);
+
     }
 }
