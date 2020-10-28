@@ -1,7 +1,10 @@
 package pl.devzyra.restcontrollers;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.MediaType;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindingResult;
@@ -14,9 +17,12 @@ import pl.devzyra.model.response.BookRest;
 import pl.devzyra.services.BookService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static pl.devzyra.exceptions.ErrorMessages.INCORRECT_FIELDS;
 
@@ -35,7 +41,7 @@ public class BookRestController {
     @Secured("ROLE_ADMIN")
     @PostMapping(produces = APPLICATION_JSON_VALUE,
             consumes = APPLICATION_JSON_VALUE)
-    public ResponseEntity<BookRest> createBook(@Valid @RequestBody BookRequestModel bookRequest, BindingResult result) throws BookServiceException {
+    public EntityModel<BookRest> createBook(@Valid @RequestBody BookRequestModel bookRequest, BindingResult result) throws BookServiceException {
 
         if (result.hasErrors()) {
             throw new IllegalStateException(INCORRECT_FIELDS.getErrorMessage());
@@ -43,9 +49,14 @@ public class BookRestController {
 
         BookRest returnVal = bookService.createBook(bookRequest);
 
-        return ResponseEntity.ok(returnVal);
 
+        Link self = linkTo(methodOn(BookRestController.class).getBookById(returnVal.getId())).withSelfRel();
+        Link allBooks = linkTo(methodOn(BookRestController.class).getAllBooks(0, 25)).withRel("books");
+
+
+        return EntityModel.of(returnVal, List.of(self, allBooks));
     }
+
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/{bookId}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) throws UserServiceException {
@@ -56,25 +67,39 @@ public class BookRestController {
     }
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookRest> getBookById(@PathVariable Long bookId) throws BookServiceException {
+    public EntityModel<BookRest> getBookById(@PathVariable Long bookId) throws BookServiceException {
 
         BookRest book = bookService.getById(bookId);
 
-        return ResponseEntity.ok(book);
+
+        Link self = linkTo(methodOn(BookRestController.class).getBookById(book.getId())).withSelfRel();
+        Link allBooks = linkTo(methodOn(BookRestController.class).getAllBooks(0, 25)).withRel("books");
+        Link addToCart = linkTo(CartRestController.class).slash(bookId).withRel("addToCart: @post /rest/cart/{bookId}");
+
+
+        return EntityModel.of(book, List.of(self, allBooks, addToCart));
     }
 
     @GetMapping
-    public List<BookRest> getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
-                                      @RequestParam(value = "limit", defaultValue = "25") int limit) {
+    public CollectionModel<BookRest> getAllBooks(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                 @RequestParam(value = "limit", defaultValue = "25") int limit) throws BookServiceException {
         List<BookRest> returnVal = new ArrayList<>();
         List<BookEntity> bookList = bookService.findAll(page, limit);
         bookList.stream().forEach(x -> {
-            BookRest bookRest = new BookRest();
-            bookRest = modelMapper.map(x, BookRest.class);
+            BookRest bookRest = modelMapper.map(x, BookRest.class);
             returnVal.add(bookRest);
         });
 
+        List<Link> hateoas = new ArrayList<>();
 
-        return returnVal;
+        Link self = linkTo(methodOn(BookRestController.class).getAllBooks(0, 25)).withSelfRel();
+        hateoas.add(self);
+
+        if (!returnVal.isEmpty()) {
+            Link first = linkTo(methodOn(BookRestController.class).getBookById(returnVal.get(0).getId())).withRel("/{bookId}");
+            hateoas.add(first);
+        }
+
+        return CollectionModel.of(returnVal, hateoas);
     }
 }

@@ -45,7 +45,7 @@ public class UserEntity implements UserDetails, Serializable {
     @JsonBackReference
     private List<OrderEntity> order = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JsonManagedReference
     private RestCartEntity cart;
 

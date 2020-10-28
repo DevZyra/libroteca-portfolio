@@ -6,17 +6,20 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.devzyra.exceptions.BookServiceException;
+import pl.devzyra.model.entities.RestCartEntity;
 import pl.devzyra.model.entities.UserEntity;
-import pl.devzyra.model.entities.UserRole;
 import pl.devzyra.model.request.AuthorRequestModel;
 import pl.devzyra.model.request.BookRequestModel;
 import pl.devzyra.repositories.BookRepository;
+import pl.devzyra.repositories.RestCartRepository;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.services.BookService;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import static pl.devzyra.model.entities.UserRole.*;
 import static pl.devzyra.model.entities.UserRole.ADMIN;
@@ -32,15 +35,17 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
     private BookRepository bookRepository;
     private BookService bookService;
     private PasswordEncoder passwordEncoder;
+    private RestCartRepository restCartRepository;
 
-    public DataLoad(UserRepository userRepository, BookRepository bookRepository, BookService bookService, PasswordEncoder passwordEncoder) {
+    public DataLoad(UserRepository userRepository, BookRepository bookRepository, BookService bookService, PasswordEncoder passwordEncoder, RestCartRepository restCartRepository) {
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.passwordEncoder = passwordEncoder;
+        this.restCartRepository = restCartRepository;
     }
 
-
+    @Transactional
     @SneakyThrows
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -59,6 +64,12 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
         admin.setAddresses(new ArrayList<>());
         admin.setRole(ADMIN);
 
+        RestCartEntity adminCart = new RestCartEntity();
+        adminCart.setCartId(String.valueOf(UUID.randomUUID()));
+        admin.setCart(adminCart);
+        adminCart.setUser(admin);
+        restCartRepository.save(adminCart);
+
         userRepository.save(admin);
 
         // @PrePersist role setup override
@@ -74,6 +85,12 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
         user.setEncryptedPassword(passwordEncoder.encode(USER_STR));
         user.setAddresses(new ArrayList<>());
         user.setRole(USER);
+
+        RestCartEntity userCart = new RestCartEntity();
+        userCart.setCartId(String.valueOf(UUID.randomUUID()));
+        user.setCart(userCart);
+        userCart.setUser(user);
+        restCartRepository.save(userCart);
 
         userRepository.save(user);
 

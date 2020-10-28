@@ -49,8 +49,8 @@ public class LoginRestController {
         final String jwt = jwtUtils.generateToken(userDetails.getUsername());
 
         response.addHeader("Authorization", "Bearer " + jwt);
-        return ResponseEntity.ok(jwt);
 
+        return ResponseEntity.ok(jwt);
     }
 
 }

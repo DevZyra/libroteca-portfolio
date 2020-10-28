@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.ErrorDetails;
 import pl.devzyra.exceptions.UserServiceException;
-import pl.devzyra.restcontrollers.BookRestController;
-import pl.devzyra.restcontrollers.SearchRestController;
-import pl.devzyra.restcontrollers.UserRestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;

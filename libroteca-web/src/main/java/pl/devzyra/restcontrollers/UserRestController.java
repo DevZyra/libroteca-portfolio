@@ -58,7 +58,7 @@ public class UserRestController {
         Link address = linkTo(UserRestController.class).slash(returnVal.getUserId()).slash("/addresses").withRel("address");
         Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel("users");
 
-        return EntityModel.of(returnVal, List.of(selfLink,allUsers,address));
+        return EntityModel.of(returnVal, List.of(selfLink, allUsers, address));
 
     }
 
@@ -71,15 +71,22 @@ public class UserRestController {
 
         List<UserDto> users = userService.getUsers(page, limit);
 
-        users.stream().forEach(x -> {
+        users.forEach(x -> {
             UserRest userModel = modelMapper.map(x, UserRest.class);
             returnValue.add(userModel);
         });
 
-        Link selfLink = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withSelfRel();
-        Link userLink = linkTo(methodOn(UserRestController.class).getSpecificUser(returnValue.get(0).getUserId())).withRel("/{userId} first user");
+        List<Link> hateoas = new ArrayList<>();
 
-        return CollectionModel.of(returnValue, List.of(selfLink, userLink));
+        Link selfLink = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withSelfRel();
+        hateoas.add(selfLink);
+
+        if (!returnValue.isEmpty()) {
+            Link userLink = linkTo(methodOn(UserRestController.class).getSpecificUser(returnValue.get(0).getUserId())).withRel("/{userId}");
+            hateoas.add(userLink);
+        }
+
+        return CollectionModel.of(returnValue, hateoas);
     }
 
     @Secured("ROLE_ADMIN")
@@ -126,16 +133,4 @@ public class UserRestController {
 
     }
 
-    @Secured("ROLE_ADMIN")
-    @GetMapping(value = "{userId}/addresses", produces = MediaType.APPLICATION_JSON_VALUE)
-    public CollectionModel<AddressRest> getUserAddresses(@PathVariable String userId) throws UserServiceException {
-
-        List<AddressRest> addresses = addressService.getAddressesByUserId(userId);
-
-        Link selfLink = linkTo(methodOn(UserRestController.class).getUserAddresses(userId)).withSelfRel();
-        Link user = linkTo(UserRestController.class).slash(userId).withRel("user");
-        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel("users");
-
-        return CollectionModel.of(addresses, List.of(selfLink, user, allUsers));
-    }
 }

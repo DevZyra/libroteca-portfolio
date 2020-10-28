@@ -1,10 +1,15 @@
 package pl.devzyra.restcontrollers;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
+import pl.devzyra.config.JmsConfig;
+import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.entities.BookEntity;
 import pl.devzyra.model.entities.OrderEntity;
@@ -18,9 +23,13 @@ import pl.devzyra.services.RestCartService;
 import pl.devzyra.services.UserService;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/rest/cart")
@@ -31,33 +40,43 @@ public class CartRestController {
     private final ModelMapper modelMapper;
     private final BookService bookService;
     private final OrderService orderService;
+    private final JmsTemplate jmsTemplate;
 
-    public CartRestController(UserService userService, RestCartService restCartService, ModelMapper modelMapper, BookService bookService, OrderService orderService) {
+    public CartRestController(UserService userService, RestCartService restCartService, ModelMapper modelMapper, BookService bookService, OrderService orderService, JmsTemplate jmsTemplate) {
         this.userService = userService;
         this.restCartService = restCartService;
         this.modelMapper = modelMapper;
         this.bookService = bookService;
         this.orderService = orderService;
+        this.jmsTemplate = jmsTemplate;
     }
 
     @GetMapping
-    public ResponseEntity<RestCartEntity> getCartByUsername(Principal principal) throws UserServiceException {
+    public EntityModel<RestCartEntity> getCartByUsername(Principal principal) throws UserServiceException, BookServiceException {
 
         UserEntity user = userService.getUserByEmail(principal.getName());
 
         RestCartEntity cart = user.getCart();
 
-        return ResponseEntity.of(Optional.of(cart));
+        Link self = linkTo(methodOn(CartRestController.class).getCartByUsername(principal)).withSelfRel();
+        Link selfPost = linkTo(methodOn(CartRestController.class).getCartByUsername(principal)).withRel("@post self to confirm order");
+        Link books = linkTo(methodOn(BookRestController.class).getAllBooks(0, 25)).withRel("books");
+
+        return EntityModel.of(cart, List.of(self, selfPost, books));
     }
 
     @PostMapping("/{bookId}")
-    public ResponseEntity<BookEntity> addToCart(@PathVariable Long bookId, Principal principal) throws UserServiceException {
+    public EntityModel<BookEntity> addToCart(@PathVariable Long bookId, Principal principal) throws UserServiceException, BookServiceException {
         UserEntity user = userService.getUserByEmail(principal.getName());
         BookEntity book = bookService.findByBookId(bookId);
 
         BookEntity bookAdded = restCartService.addToCart(user, book);
 
-        return ResponseEntity.of(Optional.of(bookAdded));
+        Link self = linkTo(methodOn(BookRestController.class).getBookById(bookId)).withSelfRel();
+        Link books = linkTo(methodOn(BookRestController.class).getAllBooks(0, 25)).withRel("books");
+        Link cart = linkTo(methodOn(CartRestController.class).getCartByUsername(principal)).withRel("cart");
+
+        return EntityModel.of(bookAdded, List.of(self, books, cart));
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -76,6 +95,9 @@ public class CartRestController {
 
         OrderRest orderRest = modelMapper.map(order, OrderRest.class);
         orderRest.setUserRest(modelMapper.map(user, UserRest.class));
+
+      // todo:impl sending object or map
+      //  jmsTemplate.convertAndSend(JmsConfig.ORDER_QUEUE, obj);
 
         return new ResponseEntity<>(orderRest, HttpStatus.CREATED);
     }
