@@ -1,5 +1,7 @@
 package pl.devzyra.restcontrollers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
@@ -80,7 +82,7 @@ public class CartRestController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderRest> confirmCartAndPlaceOrder(Principal principal) throws UserServiceException {
+    public ResponseEntity<OrderRest> confirmCartAndPlaceOrder(Principal principal) throws UserServiceException, JsonProcessingException {
         UserEntity user = userService.getUserByEmail(principal.getName());
         List<BookEntity> books = user.getCart().getBooks();
 
@@ -96,8 +98,10 @@ public class CartRestController {
         OrderRest orderRest = modelMapper.map(order, OrderRest.class);
         orderRest.setUserRest(modelMapper.map(user, UserRest.class));
 
-      // todo:impl sending object or map
-      //  jmsTemplate.convertAndSend(JmsConfig.ORDER_QUEUE, obj);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonOrder = objectMapper.writeValueAsString(orderRest);
+
+        jmsTemplate.convertAndSend(JmsConfig.ORDER_QUEUE, jsonOrder);
 
         return new ResponseEntity<>(orderRest, HttpStatus.CREATED);
     }
