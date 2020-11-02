@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.request.UserDetailsRequestModel;
-import pl.devzyra.model.response.AddressRest;
 import pl.devzyra.model.response.UserRest;
-import pl.devzyra.services.AddressService;
 import pl.devzyra.services.UserService;
 
 import javax.validation.Valid;
@@ -32,12 +30,11 @@ public class UserRestController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
-    private final AddressService addressService;
+    private static final String USERS = "users";
 
-    public UserRestController(UserService userService, ModelMapper modelMapper, AddressService addressService) {
+    public UserRestController(UserService userService, ModelMapper modelMapper) {
         this.userService = userService;
         this.modelMapper = modelMapper;
-        this.addressService = addressService;
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
@@ -56,7 +53,7 @@ public class UserRestController {
 
         Link selfLink = linkTo(UserRestController.class).slash(returnVal.getUserId()).withSelfRel();
         Link address = linkTo(UserRestController.class).slash(returnVal.getUserId()).slash("/addresses").withRel("address");
-        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel("users");
+        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel(USERS);
 
         return EntityModel.of(returnVal, List.of(selfLink, allUsers, address));
 
@@ -98,7 +95,7 @@ public class UserRestController {
         UserRest returnVal = modelMapper.map(userDto, UserRest.class);
 
         Link selfLink = linkTo(UserRestController.class).slash(userId).withSelfRel();
-        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel("users");
+        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel(USERS);
         Link address = linkTo(UserRestController.class).slash(userId).slash("/addresses").withRel("address");
 
         return EntityModel.of(returnVal, List.of(selfLink, allUsers, address));
@@ -117,7 +114,7 @@ public class UserRestController {
         UserRest returnValue = modelMapper.map(updatedUser, UserRest.class);
 
         Link selfLink = linkTo(UserRestController.class).slash(userId).withSelfRel();
-        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel("users");
+        Link allUsers = linkTo(WebMvcLinkBuilder.methodOn(UserRestController.class).getAllUsers(0, 25)).withRel(USERS);
 
         return EntityModel.of(returnValue, List.of(selfLink, allUsers));
     }

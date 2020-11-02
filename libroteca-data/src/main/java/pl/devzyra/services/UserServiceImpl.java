@@ -2,6 +2,7 @@ package pl.devzyra.services;
 
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import pl.devzyra.model.dto.AddressDto;
 import pl.devzyra.model.dto.UserDto;
 import pl.devzyra.model.entities.RestCartEntity;
 import pl.devzyra.model.entities.UserEntity;
+import pl.devzyra.model.entities.VerificationTokenEntity;
 import pl.devzyra.repositories.RestCartRepository;
 import pl.devzyra.repositories.UserRepository;
 import pl.devzyra.utils.Utils;
@@ -28,6 +30,7 @@ import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -35,14 +38,18 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final Utils utils;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationTokenService verificationTokenService;
+    private final EmailService emailService;
 
 
-    public UserServiceImpl(UserRepository userRepository, RestCartRepository restCartRepository, ModelMapper modelMapper, Utils utils, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RestCartRepository restCartRepository, ModelMapper modelMapper, Utils utils, PasswordEncoder passwordEncoder, VerificationTokenService verificationTokenService, EmailService emailService) {
         this.userRepository = userRepository;
         this.restCartRepository = restCartRepository;
         this.modelMapper = modelMapper;
         this.utils = utils;
         this.passwordEncoder = passwordEncoder;
+        this.verificationTokenService = verificationTokenService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -76,6 +83,19 @@ public class UserServiceImpl implements UserService {
 
         restCartRepository.save(cartEntity);
         userEntity.setCart(cartEntity);
+
+
+        try {
+            // email activation token
+            String token = utils.generateVerificationToken(25);
+            VerificationTokenEntity savedToken = verificationTokenService.save(userEntity, token);
+            userEntity.setEmailVerificationToken(savedToken);
+
+            // send verification email
+            emailService.sendHtmlMail(userEntity);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
 
         UserEntity stored = userRepository.save(userEntity);
 

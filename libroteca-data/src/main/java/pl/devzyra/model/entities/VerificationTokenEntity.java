@@ -18,8 +18,15 @@ public class VerificationTokenEntity implements Serializable {
     private String token;
     private Timestamp expirationDate;
 
-    @OneToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
+    public VerificationTokenEntity() {
+    }
+
+    public VerificationTokenEntity(UserEntity userEntity, String token) {
+        this.userEntity = userEntity;
+        this.token = token;
+    }
 }

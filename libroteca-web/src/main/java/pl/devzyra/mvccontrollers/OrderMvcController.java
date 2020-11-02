@@ -1,7 +1,6 @@
 package pl.devzyra.mvccontrollers;
 
 import lombok.AllArgsConstructor;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +17,6 @@ import pl.devzyra.services.UserService;
 import java.security.Principal;
 import java.util.Set;
 
-import static pl.devzyra.config.JmsConfig.ORDER_QUEUE;
-
 @Controller
 @SessionAttributes("order")
 @AllArgsConstructor
@@ -31,10 +28,9 @@ public class OrderMvcController {
 
     @ModelAttribute("order")
     public OrderRequest getOrder() {
-
+        // session attribute
         return new OrderRequest();
     }
-
 
     @PostMapping("/order/add/{bookId}")
     public String addBookToOrder(@ModelAttribute("order") OrderRequest order, @PathVariable Long bookId) {
@@ -43,9 +39,7 @@ public class OrderMvcController {
 
 
         return "index";
-
     }
-
 
     @GetMapping("/order")
     public String showOrder(@ModelAttribute("order") OrderRequest order, Model model) {
@@ -55,7 +49,6 @@ public class OrderMvcController {
 
         return "orderview";
     }
-
 
     @PostMapping("/order/confirm")
     public String confirmOrder(@ModelAttribute("order") OrderRequest orderRequest, Principal principal, Model model, SessionStatus status) throws UserServiceException {
@@ -73,6 +66,4 @@ public class OrderMvcController {
 
         return "index";
     }
-
-
 }

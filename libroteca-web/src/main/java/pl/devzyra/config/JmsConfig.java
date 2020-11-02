@@ -1,6 +1,8 @@
 package pl.devzyra.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -14,18 +16,29 @@ import javax.jms.JMSException;
 
 @Configuration
 @EnableJms
+@Slf4j
 public class JmsConfig {
 
     public static final String ORDER_QUEUE = "order-queue";
-    public static final String BROKER_URL = "tcp://localhost:61616";
+    @Value("${BROKER}")
+    private String BROKER_URL;
 
+    public JmsConfig() {
+        // empty constructor
+    }
 
     @Bean
     public ConnectionFactory connectionFactory() throws JMSException {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory();
-        connectionFactory.setBrokerURL(BROKER_URL);
-        connectionFactory.setUser("artemis");
-        connectionFactory.setPassword("simetraehcapa");
+
+        try {
+            connectionFactory.setBrokerURL(BROKER_URL);
+            connectionFactory.setUser("artemis");
+            connectionFactory.setPassword("simetraehcapa");
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+        }
+
         return connectionFactory;
     }
 

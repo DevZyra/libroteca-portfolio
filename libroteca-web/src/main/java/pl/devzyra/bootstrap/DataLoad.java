@@ -50,6 +50,13 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
+        UserEntity adminUser = userRepository.findByEmail(ADMIN_STR);
+        if(adminUser == null) {
+            alreadySetup = false;
+        } else {
+            alreadySetup = true;
+        }
+
         if (alreadySetup)
             return;
 

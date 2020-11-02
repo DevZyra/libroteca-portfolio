@@ -4,28 +4,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.devzyra.exceptions.BookServiceException;
-import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.entities.OrderEntity;
-import pl.devzyra.model.entities.RestCartEntity;
-import pl.devzyra.model.entities.UserEntity;
 import pl.devzyra.model.response.BookRest;
-import pl.devzyra.model.response.CartRest;
 import pl.devzyra.model.response.OrderRest;
 import pl.devzyra.model.response.UserRest;
 import pl.devzyra.services.OrderService;
-import pl.devzyra.services.RestCartService;
-import pl.devzyra.services.UserService;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,15 +29,11 @@ public class OrderRestController {
 
     private final OrderService orderService;
     private final ModelMapper modelMapper;
-    private final RestCartService restCartService;
-    private final UserService userService;
 
 
-    public OrderRestController(OrderService orderService, ModelMapper modelMapper, RestCartService restCartService, UserService userService) {
+    public OrderRestController(OrderService orderService, ModelMapper modelMapper) {
         this.orderService = orderService;
         this.modelMapper = modelMapper;
-        this.restCartService = restCartService;
-        this.userService = userService;
     }
 
     @GetMapping("/orders")

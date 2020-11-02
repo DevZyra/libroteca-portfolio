@@ -8,18 +8,20 @@ Jwt authentication
 (JMS)ActiveMQartemis
 
 
-- User creation, login, authentication
+- User creation, login, authentication, acc. activation
 - Book search: by title/ author
 - Placing order MVC/REST
 - Showing Users, Books, Orders, Addresses
 - HATEOAS
+- After successful registration, app sends activ. e-mail
 - After placing an order, application sends it (jms:ActiveMq-artemis) to a consumer service.
+
 
 Swagger rest documentation : ~:8080/swagger-ui/ 
 
 # Docker images
-```
 Mysql 
+```
 $ docker run -e MYSQL_ROOT_PASSWORD=root -d mysql
 
 $ docker exec -it [cont.name] bash

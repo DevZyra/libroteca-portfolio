@@ -3,24 +3,24 @@ package pl.devzyra.restcontrollers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebClient(registerRestTemplate = true)
+@TestPropertySource(properties = {"DNS=localhost"})
 class BookRestControllerTestIT {
 
-    private static String path = "http://localhost:8080/rest/books";
+    private static String path = "";
+
 
     @LocalServerPort
     int port;
@@ -31,8 +31,10 @@ class BookRestControllerTestIT {
     @Autowired
     ObjectMapper objectMapper;
 
+
     @BeforeEach
     void setUp() {
+        path = "http://localhost:" + port + "/rest/books";
         restTemplate = new RestTemplate();
     }
 
@@ -48,7 +50,7 @@ class BookRestControllerTestIT {
 
         assertNotNull(body);
         assertTrue(body.contains(titleToCheck));
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
@@ -62,6 +64,6 @@ class BookRestControllerTestIT {
         assertNotNull(body);
         assertTrue(body.contains("Book"));
         assertTrue(body.contains("isbn"));
-        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 }
