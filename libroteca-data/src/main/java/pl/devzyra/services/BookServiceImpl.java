@@ -1,7 +1,6 @@
 package pl.devzyra.services;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +15,10 @@ import pl.devzyra.model.response.BookRest;
 import pl.devzyra.repositories.AuthorRepository;
 import pl.devzyra.repositories.BookRepository;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static pl.devzyra.exceptions.ErrorMessages.NO_RECORD_FOUND;
 import static pl.devzyra.exceptions.ErrorMessages.RECORD_ALREADY_EXISTS;
 
@@ -92,49 +91,28 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookEntity findByBookId(Long bookId) {
+    public BookEntity findByBookId(Long bookId) throws BookServiceException {
 
-        Optional<BookEntity> returnVal = bookRepository.findById(bookId);
-        return returnVal.orElse(null);
+        return bookRepository.findById(bookId).orElseThrow(() -> new BookServiceException(NO_RECORD_FOUND.getErrorMessage()));
     }
 
     @Override
     public List<BookRest> findBooksByTitle(String title) {
-        List<BookRest> returnVal = new ArrayList<>();
 
-        List<BookEntity> booksByTitle = bookRepository.findAllByTitleContainingIgnoreCase(title);
-
-
-        booksByTitle.forEach(b -> {
-            BookRest bookRest = modelMapper.map(b, BookRest.class);
-            returnVal.add(bookRest);
-        });
-
-
-        return returnVal;
+        return bookRepository.findAllByTitleContainingIgnoreCase(title)
+                .stream()
+                .map(book -> modelMapper.map(book, BookRest.class))
+                .collect(toList());
     }
 
     @Override
     public List<BookRest> findBooksByAuthor(String author) {
-        List<BookRest> returnVal = new ArrayList<>();
 
-        List<String> authorStrings = Arrays.asList(author.split(" "));
-
-        Type listType = new TypeToken<List<BookRest>>() {
-        }.getType();
-
-        List<AuthorEntity> authorsFound = new ArrayList<>();
-
-        authorStrings.forEach(s -> {
-            List<AuthorEntity> allByAuthorFullName = authorRepository.findAllByAuthorFullName(s);
-            authorsFound.addAll(allByAuthorFullName);
-        });
-
-        authorsFound.stream().forEach(a -> {
-            List<BookRest> bookRest = modelMapper.map(a.getBooks(), listType);
-            returnVal.addAll(bookRest);
-        });
-
-        return returnVal;
+        return Arrays.stream(author.split(" "))
+                .map(authorRepository::findAllByAuthorFullName)
+                .flatMap(Collection::stream)
+                .flatMap(a -> a.getBooks().stream())
+                .map(book -> modelMapper.map(book, BookRest.class))
+                .collect(toList());
     }
 }

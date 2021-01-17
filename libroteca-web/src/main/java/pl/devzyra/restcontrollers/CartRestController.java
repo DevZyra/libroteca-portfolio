@@ -105,7 +105,7 @@ public class CartRestController {
     }
 
     @DeleteMapping("/{bookId}")
-    public void removeFromCart(@PathVariable Long bookId, Principal principal) throws UserServiceException {
+    public void removeFromCart(@PathVariable Long bookId, Principal principal) throws UserServiceException, BookServiceException {
         UserEntity user = userService.getUserByEmail(principal.getName());
         BookEntity book = bookService.findByBookId(bookId);
 

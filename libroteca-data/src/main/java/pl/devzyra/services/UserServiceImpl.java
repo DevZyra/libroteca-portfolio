@@ -62,12 +62,10 @@ public class UserServiceImpl implements UserService {
 
         if (!user.getAddresses().isEmpty()) {
 
-            for (int i = 0; i < user.getAddresses().size(); i++) {
-                AddressDto address = user.getAddresses().get(i);
-                address.setUserDetails(user);
-                address.setAddressId(utils.generateAddressId(20));
-                user.getAddresses().set(i, address);
-            }
+            user.getAddresses().forEach(a -> {
+                a.setUserDetails(user);
+                a.setAddressId(utils.generateAddressId(20));
+            });
 
         }
 

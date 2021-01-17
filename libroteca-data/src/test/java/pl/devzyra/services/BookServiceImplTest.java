@@ -172,7 +172,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void findByBookId() {
+    void findByBookId() throws BookServiceException {
 
         when(bookRepository.findById(anyLong())).thenReturn(java.util.Optional.ofNullable(bookEntity));
 

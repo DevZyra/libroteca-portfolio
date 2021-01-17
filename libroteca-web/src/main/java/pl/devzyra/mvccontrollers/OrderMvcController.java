@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
+import pl.devzyra.exceptions.BookServiceException;
 import pl.devzyra.exceptions.UserServiceException;
 import pl.devzyra.model.entities.BookEntity;
 import pl.devzyra.model.entities.OrderEntity;
@@ -33,7 +34,7 @@ public class OrderMvcController {
     }
 
     @PostMapping("/order/add/{bookId}")
-    public String addBookToOrder(@ModelAttribute("order") OrderRequest order, @PathVariable Long bookId) {
+    public String addBookToOrder(@ModelAttribute("order") OrderRequest order, @PathVariable Long bookId) throws BookServiceException {
 
         order.getBooks().add(bookService.findByBookId(bookId));
 

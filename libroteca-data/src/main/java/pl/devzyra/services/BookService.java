@@ -18,7 +18,7 @@ public interface BookService {
 
     List<BookEntity> findAll(int page, int limit);
 
-    BookEntity findByBookId(Long bookId);
+    BookEntity findByBookId(Long bookId) throws BookServiceException;
 
     List<BookRest> findBooksByTitle(String title);
 
