@@ -218,6 +218,6 @@ class BookServiceImplTest {
 
         assertNotNull(booksByAuthor);
         verify(authorRepository, times(1)).findAllByAuthorFullName(anyString());
-        verify(modelMapper, times(1)).map(authorEntity.getBooks(), listType);
+        verify(modelMapper, times(1)).map(bookEntity, BookRest.class);
     }
 }
